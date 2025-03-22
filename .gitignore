@@ -1,0 +1,27 @@
+# compls
+**/bin/
+**/obj/
+
+# user
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.vscode/
+**.idea/
+**appsettings.json
+**appsettings.Development.json
+
+
+# ASP.NET temporary files
+wwwroot/
+
+# other
+**.pfx
+**.pem
+logs/
+*.log
+**/Migrations/
+
+
+
