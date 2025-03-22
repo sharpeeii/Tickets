@@ -60,30 +60,5 @@ public class FilmRepository : IFilmRepository
         return await _context.Films.AnyAsync(f => f.Name == name);
     }
 
-    public async Task<TimeSpan> GetFilmDurationAsync(Guid filmId)
-    {
-        TimeSpan filmDuration = await _context.Films
-            .Where(f => f.Id == filmId)
-            .Select(f => f.Duration)
-            .FirstOrDefaultAsync();
-        return filmDuration;
-    }
 
-    public async Task<string> GetFilmNameAsync(Guid filmId)
-    {
-        string? filmName = await _context.Films
-            .Where(f => f.Id == filmId)
-            .Select(f => f.Name)
-            .FirstOrDefaultAsync();
-        return filmName;
-    }
-
-    public async Task UpdateRatingAsync(FilmEntity film, int newSum, int newAmount, float newRating)
-    {
-        film.RatingSum = newSum;
-        film.RatingAmount = newAmount;
-        film.Rating = newRating;
-
-        await _context.SaveChangesAsync();
-    }
 }

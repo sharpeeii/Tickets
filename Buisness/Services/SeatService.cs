@@ -142,6 +142,8 @@ namespace Buisness.Services
             {
                 throw new EntityExistsException("That seat already exists");
             }
+
+            await _seatRepo.UpdateSeatAsync(seatId, model);
         }
 
         public async Task DeleteSeatAsync(Guid seatId)

@@ -30,16 +30,6 @@ namespace Data.Repository
             return seats;
         }
         
-        public async Task<ICollection<SeatEntity>> GetAllSeatsEagerAsync(Guid hallId)
-        {
-            ICollection<SeatEntity> seats = await _context.Seats
-                .AsNoTracking()
-                .Where(s=>s.HallId== hallId)
-                .Include(s=> s.Reservations)
-                .ToListAsync();
-            return seats;
-        }
-
         public async Task<SeatEntity?> GetSeatAsync(Guid seatId)
         {
             SeatEntity? seat = await _context.Seats
@@ -72,10 +62,6 @@ namespace Data.Repository
             return flag;
         }
 
-        public async Task<bool> CheckIfExistsAsync(Guid seatId)
-        {
-            bool flag = await _context.Seats.AnyAsync(s => s.Id == seatId);
-            return flag;
-        }
+
     }
 }

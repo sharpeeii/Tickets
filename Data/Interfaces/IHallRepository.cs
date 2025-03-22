@@ -13,7 +13,6 @@ namespace Data.Interfaces
         public Task UpdateHallSeatsNumAsync(Guid hallId, int seatsNum);
         public Task DeleteHallAsync(Guid hallId);
         public Task<bool> CheckForDuplicateAsync(string name);
-        public Task<bool> CheckIfExistsAsync(Guid hallId);
         public Task HallSeatsDecrementAsync(Guid hallId);
         public Task HallSeatsIncrementAsync(Guid hallId);
 

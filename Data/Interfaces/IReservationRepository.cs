@@ -9,7 +9,6 @@ public interface IReservationRepository
     public Task<ReservationEntity?> GetReservationAsync(Guid userId, Guid id);
     public Task DeleteReservationAsync(Guid userId, Guid id);
     public Task<bool> CheckIfExistsAsync(Guid id);
-    
     public Task<ICollection<Guid>> GetAllReservationsForSessionAsync(Guid sessionId);
 
 }
