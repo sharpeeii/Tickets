@@ -1,11 +1,11 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Models.Session;
 using Data.Repository;
 
-namespace Buisness.Services;
+namespace Business.Services;
 
 public class SessionService : ISessionService
 {

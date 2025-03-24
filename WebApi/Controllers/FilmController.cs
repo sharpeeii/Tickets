@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

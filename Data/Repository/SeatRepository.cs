@@ -38,6 +38,14 @@ namespace Data.Repository
             return seat;
         }
 
+        public async Task<ICollection<SeatEntity?>> GetMultipleSeatsAsync(ICollection<Guid> seatIds)
+        {
+            ICollection<SeatEntity> seats = await _context.Seats
+                .Where(s => seatIds.Contains(s.Id))
+                .ToListAsync();
+            return seats;
+        }
+
         public async Task UpdateSeatAsync(Guid seatId, SeatUpdModel model)
         {
             SeatEntity? seat = await _context.Seats.FirstOrDefaultAsync(s => s.Id == seatId);

@@ -1,4 +1,4 @@
-namespace Buisness.Services.Auth;
+namespace Business.Services.Auth;
 
 public class AuthSettings
 {

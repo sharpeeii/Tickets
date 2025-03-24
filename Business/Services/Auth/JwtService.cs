@@ -2,12 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Data.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Buisness.Services.Auth;
+namespace Business.Services.Auth;
 
 public class JwtService(IOptions<AuthSettings> options) : IJwtService
 {

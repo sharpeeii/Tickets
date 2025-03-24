@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Data.Models.Seat;
 using Data.Interfaces;
 using Data.Entities;
@@ -6,7 +6,7 @@ using Common.Helpers;
 using Common.Exceptions;
 using Data.Repository;
 
-namespace Buisness.Services
+namespace Business.Services
 {
     public class SeatService : ISeatService
     {

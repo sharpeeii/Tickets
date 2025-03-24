@@ -1,10 +1,10 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Models.Film;
 
-namespace Buisness.Services;
+namespace Business.Services;
 
 public class FilmService : IFilmService
 {
