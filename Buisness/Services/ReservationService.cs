@@ -32,12 +32,9 @@ public class ReservationService : IReservationService
         {
             throw new NotFoundException("User not found!");
         }
-        
-        SeatEntity? seat = await _seatRepo.GetSeatAsync(model.SeatId);
-        if (seat == null)
-        {
-            throw new NotFoundException("Seat not found!");
-        }
+                
+        ICollection<Guid> reservations = await _reservationRepo
+            .GetAllReservationsForSessionAsync(model.SessionId);
         
         SessionEntity? session = await _sessionRepo.GetSessionAsync(model.SessionId);
 
@@ -46,28 +43,36 @@ public class ReservationService : IReservationService
             throw new NullReferenceException("Session not found!");
         }
 
-        if (seat.HallId != session.HallId)
+        ICollection<SeatEntity?> seats = await _seatRepo.GetMultipleSeatsAsync(model.SeatIds);
+        if (seats == null || seats.Count != model.SeatIds.Count)
+        {
+            throw new NotFoundException("One or multiple seats not found!");
+        }
+    
+        if (seats.Any(s=>s.HallId!=session.HallId))
         {
             throw new NotFoundException("There is no such seat in this hall!");
         }
-        
-        ICollection<Guid> reservations = await _reservationRepo
-            .GetAllReservationsForSessionAsync(model.SessionId);
 
-        if (reservations.Contains(model.SeatId))
+        if (seats.Any(s=>reservations.Contains(s.Id)))
         {
-            throw new EntityExistsException("This seat is not availbale for reservation!");
+            throw new EntityExistsException("Some seats are already reserved!");
         }
-        
 
-        ReservationEntity newRes = new ReservationEntity()
+        ICollection<ReservationEntity> newReservations = new List<ReservationEntity>();
+        foreach (Guid seatId in model.SeatIds)
         {
-            Id = Guid.NewGuid(),
-            SeatId = model.SeatId,
-            SessionId = model.SessionId,
-            UserId = userId,
-        };
-        await _reservationRepo.CreateReservationAsync(newRes);
+            ReservationEntity newRes = new ReservationEntity()
+            {
+                Id = Guid.NewGuid(),
+                SeatId = seatId,
+                SessionId = model.SessionId,
+                UserId = userId,
+            };
+            newReservations.Add(newRes);
+        }
+            
+        await _reservationRepo.CreateReservationAsync(newReservations);
     }
 
     public async Task<ICollection<ReservationModel>> GetAllReservationsForUserAsync(Guid userId)

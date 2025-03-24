@@ -1,8 +1,7 @@
-namespace Data.Models.Reservation
+namespace Data.Models.Reservation;
+
+public class ReservationCreateModel
 {
-    public class ReservationCreateModel
-    {
-        public Guid SessionId { get; set; }
-        public Guid SeatId { get; set; }
-    }
+    public Guid SessionId { get; set; }
+    public ICollection<Guid> SeatIds { get; set; }
 }
