@@ -1,6 +1,6 @@
 using Data.Models.Session;
 
-namespace Buisness.Interfaces;
+namespace Business.Interfaces;
 
 public interface ISessionService
 {

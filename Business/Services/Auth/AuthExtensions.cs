@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Buisness.Services.Auth;
+namespace Business.Services.Auth;
 
 public static class AuthExtensions
 {

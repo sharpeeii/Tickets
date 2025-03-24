@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Models;
 using Data.Models.User;
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Microsoft.AspNetCore.HttpLogging;
 
 namespace WebApi.Controllers;

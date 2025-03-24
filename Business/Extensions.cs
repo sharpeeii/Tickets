@@ -1,9 +1,9 @@
-using Buisness.Interfaces;
-using Buisness.Services;
-using Buisness.Services.Auth;
+using Business.Interfaces;
+using Business.Services;
+using Business.Services.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Buisness
+namespace Business
 {
     public static class Extensions
     {

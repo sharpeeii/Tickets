@@ -1,8 +1,8 @@
 using Data;
-using Buisness;
+using Business;
 using Microsoft.Build.Framework;
-using Buisness.Services.Auth;
-using Buisness.Services.Background;
+using Business.Services.Auth;
+using Business.Services.Background;
 using WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);

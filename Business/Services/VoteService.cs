@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Entities;
@@ -6,7 +6,7 @@ using Data.Interfaces;
 using Data.Models.Vote;
 using Microsoft.EntityFrameworkCore;
 
-namespace Buisness.Services;
+namespace Business.Services;
 
 public class VoteService : IVoteService
 {

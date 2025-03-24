@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Interfaces;
@@ -7,7 +7,7 @@ using Data.Entities;
 using Data.Repository;
 using Microsoft.AspNetCore.Identity;
 
-namespace Buisness.Services.Auth;
+namespace Business.Services.Auth;
 
 public class AccountService : IAccountService
 {

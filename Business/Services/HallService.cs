@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Data.Entities;
 using Data.Models.Hall;
 using Common.Helpers;
@@ -6,7 +6,7 @@ using Common.Exceptions;
 using Data.Interfaces;
 using Data.Models.Seat;
 
-namespace Buisness.Services;
+namespace Business.Services;
 public class HallService : IHallService
 {
     private readonly IHallRepository _hallRepo;

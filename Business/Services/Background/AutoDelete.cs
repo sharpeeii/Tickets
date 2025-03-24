@@ -1,4 +1,4 @@
-using Buisness.Interfaces;
+using Business.Interfaces;
 using Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,7 +8,7 @@ using Data.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Buisness.Services.Background;
+namespace Business.Services.Background;
 
 public class AutoDelete : BackgroundService
 {

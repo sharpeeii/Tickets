@@ -1,6 +1,6 @@
 using Data.Models.User;
 
-namespace Buisness.Interfaces;
+namespace Business.Interfaces;
 
 public interface IAccountService
 {
