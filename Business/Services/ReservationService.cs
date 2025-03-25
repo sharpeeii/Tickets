@@ -26,6 +26,7 @@ public class ReservationService : IReservationService
         _sessionRepo = sessionRepo;
     }
 
+    //https://www.youtube.com/watch?v=svwJTnZOaco  ^^
     public async Task CreateReservationAsync(ReservationCreateModel model, Guid userId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
