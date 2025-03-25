@@ -13,7 +13,7 @@ builder.Services.AddBuisnessLogic();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthSettings"));
 builder.Services.AddControllers();
-builder.Services.AddHostedService<AutoDelete>();
+builder.Services.AddHostedService<SessionAutoDelete>();
 builder.Services.AddSwaggerGen();
 
 

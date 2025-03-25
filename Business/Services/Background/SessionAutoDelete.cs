@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Business.Services.Background;
 
-public class AutoDelete : BackgroundService
+public class SessionAutoDelete : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<AutoDelete> _logger;
+    private readonly ILogger<SessionAutoDelete> _logger;
 
-    public AutoDelete(IServiceProvider serviceProvider, ILogger<AutoDelete> logger)
+    public SessionAutoDelete(IServiceProvider serviceProvider, ILogger<SessionAutoDelete> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -23,7 +23,7 @@ public class AutoDelete : BackgroundService
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("AutoDelete service started...");
+        _logger.LogInformation("SessionAutoDelete service started...");
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
