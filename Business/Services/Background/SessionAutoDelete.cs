@@ -1,4 +1,4 @@
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

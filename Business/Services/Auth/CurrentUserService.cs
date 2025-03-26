@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Microsoft.AspNetCore.Http;
 
 namespace Business.Services.Auth;

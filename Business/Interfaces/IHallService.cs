@@ -1,6 +1,6 @@
 using Data.Models.Hall;
 
-namespace Business.Interfaces
+namespace Business.Interfaces.Auth
 {
     public interface IHallService
     {

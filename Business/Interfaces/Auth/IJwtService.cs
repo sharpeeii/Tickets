@@ -1,6 +1,6 @@
 using Data.Entities;
 
-namespace Business.Interfaces;
+namespace Business.Interfaces.Auth;
 
 public interface IJwtService
 {

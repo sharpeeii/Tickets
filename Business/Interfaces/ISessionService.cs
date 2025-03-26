@@ -1,6 +1,6 @@
 using Data.Models.Session;
 
-namespace Business.Interfaces;
+namespace Business.Interfaces.Auth;
 
 public interface ISessionService
 {

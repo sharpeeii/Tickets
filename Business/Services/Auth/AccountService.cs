@@ -1,4 +1,4 @@
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Interfaces;
@@ -20,8 +20,35 @@ public class AccountService : IAccountService
         _jwtService = jwtService;
     }
 
+    public async Task RegisterAdmin(UserCreateModel model)
+    {
+        ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
+        
+        if (await _accountRepo.CheckIfEmailExists(model.Email))
+        {
+            throw new InvalidInputException("Admin with this email already exists!");
+        }
+        
+        if (await _accountRepo.CheckIfUsernameExists(model.Username))
+        {
+            throw new InvalidInputException("Admin with this username already exists!");
+        }
+        
+        UserEntity newAdmin = new UserEntity()
+        {
+            Username = model.Username,
+            Email = model.Email,
+            Id = Guid.NewGuid(),
+            Role = "Admin"
+        };
+        string passHash = new PasswordHasher<UserEntity>()
+            .HashPassword(newAdmin, model.Password);
+        newAdmin.PasswordHash = passHash;
+        await _accountRepo.CreateAccountAsync(newAdmin);
 
-    public async Task Register(UserCreateModel model)
+    }
+
+    public async Task RegisterUser(UserCreateModel model)
     {
         ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
         
