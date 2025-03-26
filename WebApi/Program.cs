@@ -1,6 +1,7 @@
 using Data;
 using Business;
 using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore;
 using Business.Services.Auth;
 using Business.Services.Background;
 using WebApi.Middleware;
@@ -17,7 +18,15 @@ builder.Services.AddHostedService<SessionAutoDelete>();
 builder.Services.AddSwaggerGen();
 
 
+
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwagger();

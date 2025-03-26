@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Models;
 using Data.Models.User;
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Microsoft.AspNetCore.HttpLogging;
 
 namespace WebApi.Controllers;
@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(UserCreateModel model)
     {
-        await _accountService.Register(model);
+        await _accountService.RegisterUser(model);
         return NoContent();
     }
 

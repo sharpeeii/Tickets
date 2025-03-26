@@ -1,6 +1,6 @@
 using Data.Models.Vote;
 
-namespace Business.Interfaces;
+namespace Business.Interfaces.Auth;
 
 public interface IVoteService
 {

@@ -1,7 +1,7 @@
 using Data.Models;
 using Data.Models.Seat;
 
-namespace Business.Interfaces
+namespace Business.Interfaces.Auth
 {
     public interface ISeatService
     {

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Data.Models.Vote;
 using Microsoft.AspNetCore.Authorization;
 

@@ -1,4 +1,4 @@
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Data.Models.Seat;
 using Data.Interfaces;
 using Data.Entities;

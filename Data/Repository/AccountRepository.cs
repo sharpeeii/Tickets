@@ -18,7 +18,7 @@ public class AccountRepository : IAccountRepository
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
     }
-
+    
     public async Task<UserEntity?> GetByEmailAsync(string email)
     {
         UserEntity? user = await _context.Users

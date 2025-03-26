@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Business.Interfaces;
+using Business.Interfaces.Auth;
 using Data.Models.Session;
 using Microsoft.AspNetCore.Authorization;
 
