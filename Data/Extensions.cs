@@ -21,7 +21,7 @@ namespace Data
 
             services.AddDbContext<AppDbContext>(x => 
             {
-                x.UseNpgsql("Host=localhost;Database=cinema;Username=postgres;Password=qwerty123");
+                x.UseNpgsql("Host=db;Port=5432;Username=postgres;Password=1234;Database=tickets-database");
             });
             return services;
         }
