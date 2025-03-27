@@ -1,4 +1,4 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Data.Entities;
 using Data.Models.Hall;
 using Common.Helpers;

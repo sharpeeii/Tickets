@@ -1,6 +1,6 @@
 using Data.Models.Reservation;
 
-namespace Business.Interfaces.Auth;
+namespace Business.Interfaces;
 
 public interface IReservationService
 {

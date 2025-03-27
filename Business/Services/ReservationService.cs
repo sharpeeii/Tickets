@@ -1,4 +1,4 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Entities;
@@ -93,8 +93,8 @@ public class ReservationService : IReservationService
                 SeatId = e.SeatId,
                 SessionId = e.SessionId,
                 UserId = e.UserId,
-                FilmName = e.Session.Film.Name,
-                HallName = e.Session.Hall.Name
+                FilmName = e.Session?.Film?.Name ?? "unknown", //временные трудности
+                HallName = e.Session?.Hall?.Name ?? "unknown"
             }).ToList();
 
         return reservationModels;
@@ -121,8 +121,8 @@ public class ReservationService : IReservationService
             SeatId = reservation.SeatId,
             SessionId = reservation.SessionId,
             UserId = reservation.UserId,
-            FilmName = reservation.Session.Film.Name,
-            HallName = reservation.Session.Hall.Name
+            FilmName = reservation.Session?.Film?.Name ?? "unkown", //временные трудности
+            HallName = reservation.Session?.Hall?.Name ?? "unkown"
         };
 
         return reservationModel;

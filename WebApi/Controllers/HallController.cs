@@ -1,4 +1,4 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Data.Models.Hall;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +14,7 @@ public class HallController : ControllerBase
     {
         _hallService = hallService;
     }
-
-    [HttpPost("halls")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateHall([FromBody] HallCreateModel model)
-    {
-        await _hallService.CreateHallAsync(model);
-        return Created();
-    }
-
+    
     [HttpGet("halls")]
     public async Task<IActionResult> GetAllHalls()
     {
@@ -35,22 +27,6 @@ public class HallController : ControllerBase
     {
         var hall = await _hallService.GetHallAsync(hallId);
         return Ok(hall);
-    }
-
-    [HttpPut("halls/{hallId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateHalls([FromRoute] Guid hallId, [FromBody] HallUpdModel model)
-    {
-        await _hallService.UpdateHallAsync(hallId, model);
-        return Ok();
-    }
-
-    [HttpDelete("halls/{hallId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteHall([FromRoute] Guid hallId)
-    {
-        await _hallService.DeleteHallAsync(hallId);
-        return Ok();
     }
     
 }

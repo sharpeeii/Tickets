@@ -1,4 +1,4 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;

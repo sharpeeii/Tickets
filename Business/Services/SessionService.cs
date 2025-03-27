@@ -1,9 +1,8 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Models.Session;
-using Data.Repository;
 
 namespace Business.Services;
 

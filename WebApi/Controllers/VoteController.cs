@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Business.Interfaces.Auth;
 using Data.Models.Vote;
 using Microsoft.AspNetCore.Authorization;
+using Business.Interfaces;
 
 namespace WebApi.Controllers;
 
