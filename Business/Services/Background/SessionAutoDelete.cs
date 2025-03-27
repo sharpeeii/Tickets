@@ -1,11 +1,7 @@
-using Business.Interfaces.Auth;
 using Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Data.Interfaces;
-using Data.Models.Session;
-using Data.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Business.Services.Background;
