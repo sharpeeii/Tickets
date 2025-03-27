@@ -1,10 +1,9 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Models.Vote;
-using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
 
@@ -61,7 +60,7 @@ public class VoteService : IVoteService
             await _unit.SaveChangesAsync();
             await _unit.CommitAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await _unit.RollbackAsync();
             throw;
@@ -102,7 +101,7 @@ public class VoteService : IVoteService
             await _unit.SaveChangesAsync();
             await _unit.CommitAsync();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await _unit.RollbackAsync();
             throw;

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Data.Models.Session;
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,14 +16,6 @@ public class SessionController : ControllerBase
         _sessionService = sessionService;
     }
 
-    [HttpPost("sessions")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateSession([FromBody] SessionCreateModel model)
-    {
-        await _sessionService.CreateSessionAsync(model);
-        return Ok();
-    }
-
     [HttpGet("sessions")]
     public async Task<IActionResult> GetAllSessions()
     {
@@ -38,20 +30,4 @@ public class SessionController : ControllerBase
         return Ok(sessionGet);
     }
 
-    [HttpPut("sessions/{sessionId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateSession([FromRoute]Guid sessionId, [FromBody] SessionUpdModel model)
-
-    {
-        await _sessionService.UpdateSessionAsync(sessionId, model);
-        return Ok();
-    }
-
-    [HttpDelete("sessions/{sessionId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteSession([FromRoute] Guid sessionId)
-    {
-        await _sessionService.DeleteSessionAsync(sessionId);
-        return Ok();
-    }
 }

@@ -1,6 +1,6 @@
 using Data.Models.Film;
 
-namespace Business.Interfaces.Auth;
+namespace Business.Interfaces;
 
 public interface IFilmService
 {

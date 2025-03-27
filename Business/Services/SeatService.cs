@@ -1,4 +1,4 @@
-using Business.Interfaces.Auth;
+using Business.Interfaces;
 using Data.Models.Seat;
 using Data.Interfaces;
 using Data.Entities;
@@ -77,7 +77,7 @@ namespace Business.Services
                 await _unit.SaveChangesAsync();
                 await _unit.CommitAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await _unit.RollbackAsync();
                 throw;
@@ -163,7 +163,7 @@ namespace Business.Services
                 await _unit.SaveChangesAsync();
                 await _unit.CommitAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await _unit.RollbackAsync();
                 throw;
