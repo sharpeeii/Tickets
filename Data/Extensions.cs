@@ -1,4 +1,3 @@
-using Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Data.Interfaces;
@@ -23,7 +22,10 @@ namespace Data
             {
                 x.UseNpgsql("Host=db;Port=5432;Username=postgres;Password=1234;Database=tickets-database");
             });
+            services.AddStackExchangeRedisCache(options =>
+                options.Configuration = "cacher:6379");
             return services;
+
         }
     }
 }

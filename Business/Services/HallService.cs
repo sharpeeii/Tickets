@@ -27,7 +27,7 @@ public class HallService : IHallService
         bool hallExists = await _hallRepo.CheckForDuplicateAsync(model.Name);
         if (hallExists)
         {
-            throw new EntityExistsException($"Hall with name {model.Name} already exists");
+            throw new EntityExistsException($"Hall with name '{model.Name}' already exists");
         }
 
         var newHall = new HallEntity
@@ -61,7 +61,7 @@ public class HallService : IHallService
         {
             throw new NotFoundException("Hall not found!");
         }
-        ICollection<SeatModel> seatModels = hall.Seats
+        ICollection<SeatModel> seatModels = hall.Seats  
             .Select(s => new SeatModel
             {
                 Id = s.Id,
