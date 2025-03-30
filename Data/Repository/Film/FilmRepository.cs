@@ -3,7 +3,7 @@ using Data.Interfaces;
 using Data.Models.Film;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repository;
+namespace Data.Repository.Film;
 
 public class FilmRepository : IFilmRepository
 {
