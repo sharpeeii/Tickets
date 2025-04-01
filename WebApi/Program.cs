@@ -3,6 +3,7 @@ using Business;
 using Microsoft.EntityFrameworkCore;
 using Business.Services.Auth;
 using Business.Services.Background;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Scalar.AspNetCore;
 using WebApi.Middleware;
 using WebApi.Swagger;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDataAccess();
+
 builder.Services.AddBuisnessLogic();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthSettings"));

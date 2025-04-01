@@ -1,19 +1,21 @@
+using System.Text.Json.Serialization;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Models.Film;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Data.Repository.Film;
 
 public class CachedFilmRepository : IFilmRepository
 {
     private readonly FilmRepository _decoratedRepo;
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _distributedCache;
 
-    public CachedFilmRepository(FilmRepository decoratedRepo, IMemoryCache cache)
+    public CachedFilmRepository(FilmRepository decoratedRepo, IDistributedCache distributedCache)
     {
         _decoratedRepo = decoratedRepo;
-        _cache = cache;
+        _distributedCache = distributedCache;
     }
     
     public async Task CreateFilmAsync(FilmEntity film)
@@ -29,11 +31,24 @@ public class CachedFilmRepository : IFilmRepository
     public async Task<FilmEntity?> GetFilmAsync(Guid filmId)
     {
         string key = $"film-{filmId}";
-        return await _cache.GetOrCreateAsync(key, entry =>
+        string? cachedFilm = await _distributedCache.GetStringAsync(key);
+        
+        FilmEntity? film;
+        
+        if (string.IsNullOrEmpty(cachedFilm))
         {
-            entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
-            return _decoratedRepo.GetFilmAsync(filmId);
-        });
+            film = await _decoratedRepo.GetFilmAsync(filmId);
+            if (film == null)
+            {
+                return null;
+            }
+
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(film));
+            return film;
+        }
+
+        film = JsonConvert.DeserializeObject<FilmEntity>(cachedFilm);
+        return film;
     }
 
     public async Task UpdateFilmAsync(Guid filmId, FilmModel model)
