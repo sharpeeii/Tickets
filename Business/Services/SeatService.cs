@@ -4,7 +4,7 @@ using Data.Interfaces;
 using Data.Entities;
 using Common.Helpers;
 using Common.Exceptions;
-using Data.Repository;
+using Data.Repository.Seat;
 
 namespace Business.Services
 {
