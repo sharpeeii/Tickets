@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Data.Interfaces;
 using Data.Repository;
 using Data.Repository.Film;
+using Data.Repository.Seat;
 
 namespace Data
 {
@@ -11,7 +12,8 @@ namespace Data
         public static IServiceCollection AddDataAccess(this IServiceCollection services)
         {   
             services.AddScoped<IHallRepository, HallRepository>();
-            services.AddScoped<ISeatRepository, SeatRepository>();
+            services.AddScoped<SeatRepository>();
+            services.AddScoped<ISeatRepository, CachedSeatRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<FilmRepository>();
             services.AddScoped<IFilmRepository, CachedFilmRepository>();
