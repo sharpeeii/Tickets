@@ -41,33 +41,7 @@ public class SessionRepository : ISessionRepository
             .FirstOrDefaultAsync(s => s.Id == sessionId);
         return session;
     }
-
-    public async Task UpdateSessionHallAsync(Guid sessionId, Guid hallId)
-    {
-        SessionEntity? session = await _context.Sessions
-            .FirstOrDefaultAsync(s => s.Id == sessionId);
-        if (session == null)
-        {
-            throw new NullReferenceException("Session does not exist!");
-        }
-
-        session.HallId = hallId;
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateSessionDateAsync(Guid sessionId, DateTime date)
-    {
-        SessionEntity? session = await _context.Sessions
-            .FirstOrDefaultAsync(s => s.Id == sessionId);
-        if (session == null)
-        {
-            throw new NullReferenceException("Session does not exist!");
-        }
-
-        session.StartDate = date;
-        await _context.SaveChangesAsync();
-    }
-
+    
     public async Task DeleteSessionAsync(Guid sessionId)
     {
         await _context.Sessions

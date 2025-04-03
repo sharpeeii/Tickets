@@ -102,29 +102,7 @@ public class SessionService : ISessionService
 
         return sessionGetModel;
     }
-
-    public async Task UpdateSessionAsync(Guid sessionId, SessionUpdModel model)
-    {
-        if (await _sessionRepo.SessionDateExistsAsync(model.StartDate, model.HallId))
-        {
-            throw new EntityExistsException("The session already exists at this time!");
-        }
-
-        if (model.StartDate <= DateTime.Now)
-        {
-            throw new InvalidInputException("Please provide a future date!");
-        }
-        
-        if (model.HallId != Guid.Empty)
-        {
-            await _sessionRepo.UpdateSessionHallAsync(sessionId, model.HallId);
-        }
-
-        if (model.StartDate != DateTime.MinValue)
-        {
-            await _sessionRepo.UpdateSessionDateAsync(sessionId, model.StartDate);
-        }
-    }
+    
 
     public async Task DeleteSessionAsync(Guid sessionId)
     {

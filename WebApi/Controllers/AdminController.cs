@@ -125,15 +125,6 @@ public class AdminController : ControllerBase
         return Ok();
     }
     
-    [HttpPut("sessions/{sessionId}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateSession([FromRoute]Guid sessionId, [FromBody] SessionUpdModel model)
-
-    {
-        await _sessionService.UpdateSessionAsync(sessionId, model);
-        return Ok();
-    }
-
     [HttpDelete("sessions/{sessionId}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteSession([FromRoute] Guid sessionId)
