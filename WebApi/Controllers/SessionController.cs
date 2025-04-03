@@ -16,10 +16,10 @@ public class SessionController : ControllerBase
         _sessionService = sessionService;
     }
 
-    [HttpGet("sessions")]
-    public async Task<IActionResult> GetAllSessions()
+    [HttpGet("sessions/byFilm/{filmId}")]
+    public async Task<IActionResult> GetAllSessions([FromRoute] Guid filmId)
     {
-        ICollection<SessionGetAllModel> sessions = await _sessionService.GetAllSessionsAsync();
+        ICollection<SessionGetAllModel> sessions = await _sessionService.GetAllSessionsAsync(filmId);
         return Ok(sessions);
     }
 

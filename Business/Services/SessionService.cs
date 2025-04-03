@@ -24,13 +24,12 @@ public class SessionService : ISessionService
 
     public async Task CreateSessionAsync(SessionCreateModel model)
     {
-        if (await _sessionRepo.SessionDateExistsAsync(model.SessionDate, model.HallId))
+        if (await _sessionRepo.SessionDateExistsAsync(model.StartDate, model.HallId))
         {
             throw new EntityExistsException("The session already exists at this time!");
         }
         
-        
-        if (model.SessionDate <= DateTime.UtcNow)
+        if (model.StartDate <= DateTime.UtcNow)
         {
             throw new InvalidInputException("Please provide a future date!");
         }
@@ -47,33 +46,35 @@ public class SessionService : ISessionService
         {
             throw new NullReferenceException("Hall does not exist!");
         }
+
+        if ((await IsSlotAvailableAsync(model.StartDate, film.Duration)) == false)
+        {
+            throw new InvalidInputException("This date is not available!");
+        }
         
         SessionEntity newSession = new SessionEntity()
         {
             Id = Guid.NewGuid(),
-            SessionDate = model.SessionDate,
+            StartDate = model.StartDate,
             FilmId = model.FilmId,
-            HallId = model.HallId,
-            SessionDuration = film.Duration
+            HallId = model.HallId,                //additional time for hall cleaning/prepeartion
+            EndDate = model.StartDate + film.Duration + TimeSpan.FromMinutes(10) 
         };
         await _sessionRepo.CreateSessionAsync(newSession);
     }
     
-    public async Task<ICollection<SessionGetAllModel>> GetAllSessionsAsync()
+    public async Task<ICollection<SessionGetAllModel>> GetAllSessionsAsync(Guid filmId)
     {
-        
-        ICollection<SessionEntity> sessions = await _sessionRepo.GetAllSessionsAsync();
-        
+        ICollection<SessionEntity> sessions = await _sessionRepo.GetSessionsByFilmAsync(filmId);
         
         ICollection<SessionGetAllModel> models = sessions.Select(s => new SessionGetAllModel
         {
             HallId = s.HallId,
-            SessionDate = s.SessionDate,
-            SessionDuration =s.SessionDuration,
+            StartDate = s.StartDate,
             Id = s.Id,
             FilmId = s.FilmId,
-            FilmName = s.Film?.Name ?? "Uknown",
-            HallHame = s.Hall?.Name ?? "Uknown"
+            FilmName = s.Film?.Name ?? "Not found",
+            HallHame = s.Hall?.Name ?? "Not found"
         }).ToList();
         
         return models;
@@ -90,43 +91,42 @@ public class SessionService : ISessionService
         SessionGetModel sessionGetModel = new SessionGetModel()
         {
             Id = sessionEntity.Id,
-            SessionDate = sessionEntity.SessionDate,
-            SessionDuration = sessionEntity.SessionDuration,
+            StartDate = sessionEntity.StartDate,
+            SessionDuration = sessionEntity.Film?.Duration ?? TimeSpan.Zero,
             HallId = sessionEntity.HallId,
             FilmId = sessionEntity.FilmId,
-            FilmName = sessionEntity.Film?.Name ?? "Uknown",
-            HallHame = sessionEntity.Hall?.Name ?? "Uknown",
+            FilmName = sessionEntity.Film?.Name ?? "Not found",
+            HallHame = sessionEntity.Hall?.Name ?? "Not found",
             Seats = await _seatService.GetSeatsForSessionAsync(sessionEntity.HallId, sessionId)
         };
 
         return sessionGetModel;
     }
-
-    public async Task UpdateSessionAsync(Guid sessionId, SessionUpdModel model)
-    {
-        if (await _sessionRepo.SessionDateExistsAsync(model.SessionDate, model.HallId))
-        {
-            throw new EntityExistsException("The session already exists at this time!");
-        }
-
-        if (model.SessionDate <= DateTime.Now)
-        {
-            throw new InvalidInputException("Please provide a future date!");
-        }
-        
-        if (model.HallId != Guid.Empty)
-        {
-            await _sessionRepo.UpdateSessionHallAsync(sessionId, model.HallId);
-        }
-
-        if (model.SessionDate != DateTime.MinValue)
-        {
-            await _sessionRepo.UpdateSessionDateAsync(sessionId, model.SessionDate);
-        }
-    }
+    
 
     public async Task DeleteSessionAsync(Guid sessionId)
     {
         await _sessionRepo.DeleteSessionAsync(sessionId);
+    }
+    
+    public async Task<bool> IsSlotAvailableAsync(DateTime requestedStart, TimeSpan filmDuration)
+    {
+        DateTime requestedEnd = requestedStart + filmDuration + TimeSpan.FromMinutes(10);
+        ICollection<SessionEntity> sessionsOfTheDay = await _sessionRepo
+            .GetSessionsByDayAsync(requestedStart);
+        if (sessionsOfTheDay.Count == 0)
+        {
+            return true;
+        }
+
+        foreach (SessionEntity session in sessionsOfTheDay)
+        {
+            if (session.EndDate >= requestedStart && session.StartDate <= requestedEnd )
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

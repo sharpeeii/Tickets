@@ -20,16 +20,6 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     container_name: postgres_container
-  migrator:
-    image: mcr.microsoft.com/dotnet/sdk:9.0
-    working_dir: /app/WebApi
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-    entrypoint: [ "dotnet", "ef", "database", "update" ]
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=tickets-database;Username=postgres;Password=1234
   redis_service:
     image: redis:latest
     restart: always
