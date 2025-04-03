@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Common.Helpers;
 
     
-namespace Data.Repository;
+namespace Data.Repository.Session;
 
 public class SessionRepository : ISessionRepository
 {
@@ -21,10 +21,11 @@ public class SessionRepository : ISessionRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ICollection<SessionEntity>> GetAllSessionsAsync()
+    public async Task<ICollection<SessionEntity>> GetSessionsByFilmAsync(Guid filmId)
     {
         ICollection<SessionEntity> sessions = await _context.Sessions
             .AsNoTracking()
+            .Where(s=> s.FilmId==filmId)
             .Include(s=>s.Film)
             .Include(s => s.Hall)
             .ToListAsync();
@@ -79,6 +80,14 @@ public class SessionRepository : ISessionRepository
     {
         return await _context.Sessions
             .AnyAsync(s => s.SessionDate == date && s.HallId == hallId);
+    }
+    
+    public async Task<ICollection<SessionEntity>> GetAllSessionsAsync()
+    {
+        ICollection<SessionEntity> sessions = await _context.Sessions
+            .AsNoTracking()
+            .ToListAsync();
+        return sessions;
     }
     
 }

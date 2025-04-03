@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Data.Interfaces;
 using Data.Repository;
+using Data.Repository.Session;
 using Data.Repository.Film;
 using Data.Repository.Seat;
 

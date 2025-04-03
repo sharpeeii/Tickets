@@ -59,11 +59,9 @@ public class SessionService : ISessionService
         await _sessionRepo.CreateSessionAsync(newSession);
     }
     
-    public async Task<ICollection<SessionGetAllModel>> GetAllSessionsAsync()
+    public async Task<ICollection<SessionGetAllModel>> GetAllSessionsAsync(Guid filmId)
     {
-        
-        ICollection<SessionEntity> sessions = await _sessionRepo.GetAllSessionsAsync();
-        
+        ICollection<SessionEntity> sessions = await _sessionRepo.GetSessionsByFilmAsync(filmId);
         
         ICollection<SessionGetAllModel> models = sessions.Select(s => new SessionGetAllModel
         {
@@ -72,8 +70,8 @@ public class SessionService : ISessionService
             SessionDuration =s.SessionDuration,
             Id = s.Id,
             FilmId = s.FilmId,
-            FilmName = s.Film?.Name ?? "Uknown",
-            HallHame = s.Hall?.Name ?? "Uknown"
+            FilmName = s.Film?.Name ?? "Not found",
+            HallHame = s.Hall?.Name ?? "Not found"
         }).ToList();
         
         return models;
