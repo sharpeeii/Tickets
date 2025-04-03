@@ -37,7 +37,7 @@ public class SessionAutoDelete : BackgroundService
         
             foreach (SessionEntity session in sessions)
             {
-                if (session.SessionDate <= DateTime.UtcNow)
+                if (session.StartDate <= DateTime.UtcNow)
                 {
                     await sessionRepo.DeleteSessionAsync(session.Id);
                     _logger.LogInformation($"Deleted expired session {session.Id}");

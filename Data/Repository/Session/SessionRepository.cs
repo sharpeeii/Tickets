@@ -64,7 +64,7 @@ public class SessionRepository : ISessionRepository
             throw new NullReferenceException("Session does not exist!");
         }
 
-        session.SessionDate = date;
+        session.StartDate = date;
         await _context.SaveChangesAsync();
     }
 
@@ -79,7 +79,7 @@ public class SessionRepository : ISessionRepository
     public async Task<bool> SessionDateExistsAsync(DateTime date, Guid hallId)
     {
         return await _context.Sessions
-            .AnyAsync(s => s.SessionDate == date && s.HallId == hallId);
+            .AnyAsync(s => s.StartDate == date && s.HallId == hallId);
     }
     
     public async Task<ICollection<SessionEntity>> GetAllSessionsAsync()
@@ -89,5 +89,13 @@ public class SessionRepository : ISessionRepository
             .ToListAsync();
         return sessions;
     }
-    
+
+    public async Task<ICollection<SessionEntity>> GetSessionsByDayAsync(DateTime date)
+    {
+        ICollection<SessionEntity> sessions = await _context.Sessions
+            .AsNoTracking()
+            .Where(s => s.StartDate.Day == date.Day)
+            .ToListAsync();
+        return sessions;
+    }
 }
