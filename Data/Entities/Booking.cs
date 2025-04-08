@@ -3,9 +3,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Data.Entities;
 
-public class BookingEntity
+public class Booking
 {
-    public Guid Id { get; set; }
+    public Guid BookingId { get; set; }
     public DateTime BookDate { get; set; } = DateTime.UtcNow;
     public Decimal TotalSum { get; set; }
     public bool IsPaid { get; set; } = false; //pending = false, confirmed = true;

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entities
 {
-    public class HallEntity
+    public class Hall
     {
         public Guid Id { get; set; }
         [MaxLength(100)]

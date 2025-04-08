@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace Data.Entities
 {
-    public class SessionEntity
+    public class Session
     {
         public Guid Id { get; set; }
         public Guid HallId { get; set; }
         public Guid FilmId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public virtual HallEntity? Hall { get; set; }
-        public virtual ICollection<BookedSeatEntity>? BookedSeats { get; set; }
-        public virtual FilmEntity? Film { get; set; }
+        public virtual Hall? Hall { get; set; }
+        public virtual ICollection<BookedSeat>? BookedSeats { get; set; }
+        public virtual Film? Film { get; set; }
     }
 }

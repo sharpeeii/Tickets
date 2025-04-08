@@ -2,13 +2,13 @@ using System.Diagnostics.Contracts;
 
 namespace Data.Entities
 {
-    public class SeatEntity
+    public class Seat
     {
         public Guid Id { get; set; }
         public int Row { get; set; }
         public int Number { get; set; }
         public Guid HallId { get; set; }
-        public virtual HallEntity? Hall { get; set; }
-        public virtual ICollection<BookedSeatEntity>? BookedSeats { get; set; } 
+        public virtual Hall? Hall { get; set; }
+        public virtual ICollection<BookedSeat>? BookedSeats { get; set; } 
     }
 }
