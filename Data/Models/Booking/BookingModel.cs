@@ -1,6 +1,6 @@
 namespace Data.Models.Reservation
 {
-    public class ReservationModel
+    public class BookingModel
     {
         public Guid Id { get; set; }
         public DateTime ReservationDate { get; set; }

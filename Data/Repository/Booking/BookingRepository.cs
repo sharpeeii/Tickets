@@ -5,32 +5,48 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository;
 
-public class ReservationRepository : IReservationRepository
+public class BookingRepository : IBookingRepository
 {
     private readonly AppDbContext _context;
+    private readonly IUnitOfWork _unit;
 
-    public ReservationRepository(AppDbContext context)
+    public BookingRepository(AppDbContext context, IUnitOfWork unit)
     {
         _context = context;
+        _unit = unit;
     }
 
-    public async Task CreateReservationAsync(ICollection<BookingEntity> reservations)
+    public async Task CreateBookingAsync(BookingEntity booking, ICollection<BookedSeatEntity> bookedSeats)
     {
-        await _context.Bookings.AddRangeAsync(reservations);
+        await _unit.BeginTransactionAsync();
+        try
+        {
+            await _context.Bookings.AddAsync(booking);
+            await _context.BookedSeats.AddRangeAsync(bookedSeats);
+
+            await _unit.CommitAsync();
+            await _unit.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            await _unit.RollbackAsync();
+            throw;
+        }
         await _context.SaveChangesAsync();
     }
 
     public async Task<ICollection<BookingEntity>> GetAllReservationsForUserAsync(Guid userId)
     {
-        ICollection<BookingEntity> reservations = await _context.Bookings
+        ICollection<BookingEntity> bookings = await _context.Bookings
             .AsNoTracking()
-            .Where(r => r.UserId == userId)
-            .Include(r => r.Session)
-            .ThenInclude(s => s.Hall)
-            .Include(r => r.Session)
-            .ThenInclude(s => s.Film)
+            .Where(b => b.UserId == userId)
+            .Include(b => b.Session)
+                .ThenInclude(s => s.Hall)
+            .Include(b => b.Session)
+                .ThenInclude(s => s.Film)
+            .Include(b=>b.BookedSeats)
             .ToListAsync();
-        return reservations;
+        return bookings;
     }
 
     public async Task<BookingEntity?> GetReservationAsync(Guid userId, Guid reservationId)

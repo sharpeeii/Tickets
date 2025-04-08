@@ -8,33 +8,33 @@ using Data.Repository;
 
 namespace Business.Services;
 
-public class ReservationService : IReservationService
+public class BookingService : IBookingService
 {
-    private readonly IReservationRepository _reservationRepo;
+    private readonly IBookingRepository _bookingRepo;
     private readonly IAccountRepository _accountRepo;
     private readonly ISeatRepository _seatRepo;
     private readonly ISessionRepository _sessionRepo;
     
-    public ReservationService
-        (IReservationRepository reservationRepo, 
+    public BookingService
+        (IBookingRepository bookingRepo, 
             IAccountRepository accountRepo, ISeatRepository seatRepo,
             ISessionRepository sessionRepo)
     {
-        _reservationRepo = reservationRepo;
+        _bookingRepo = bookingRepo;
         _accountRepo = accountRepo;
         _seatRepo = seatRepo;
         _sessionRepo = sessionRepo;
     }
 
     //https://www.youtube.com/watch?v=svwJTnZOaco 
-    public async Task CreateReservationAsync(ReservationCreateModel model, Guid userId)
+    public async Task CreateBookingAsync(BookingCreateModel model, Guid userId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
         {
             throw new NotFoundException("User not found!");
         }
                 
-        ICollection<Guid> reservations = await _reservationRepo
+        ICollection<Guid> bookings = await _bookingRepo
             .GetAllReservationsForSessionAsync(model.SessionId);
         
         SessionEntity? session = await _sessionRepo.GetSessionAsync(model.SessionId);
@@ -55,7 +55,7 @@ public class ReservationService : IReservationService
             throw new NotFoundException("There is no such seat in this hall!");
         }
 
-        if (seats.Any(s=>reservations.Contains(s.Id)))
+        if (seats.Any(s=>bookings.Contains(s.Id)))
         {
             throw new EntityExistsException("Some seats are already reserved!");
         }
@@ -73,20 +73,20 @@ public class ReservationService : IReservationService
             newReservations.Add(newRes);
         }
             
-        await _reservationRepo.CreateReservationAsync(newReservations);
+        await _bookingRepo.CreateBookingAsync(newReservations);
     }
 
-    public async Task<ICollection<ReservationModel>> GetAllReservationsForUserAsync(Guid userId)
+    public async Task<ICollection<BookingModel>> GetAllBookingsForUserAsync(Guid userId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
         {
             throw new NotFoundException("User not found!");
         }
         
-        ICollection<BookingEntity> reservationEntities = await _reservationRepo
+        ICollection<BookingEntity> reservationEntities = await _bookingRepo
             .GetAllReservationsForUserAsync(userId);
-        ICollection<ReservationModel> reservationModels = reservationEntities
-            .Select(e => new ReservationModel
+        ICollection<BookingModel> reservationModels = reservationEntities
+            .Select(e => new BookingModel
             {
                 Id = e.Id,
                 ReservationDate = e.BookDate,
@@ -101,20 +101,20 @@ public class ReservationService : IReservationService
     }
     
 
-    public async Task<ReservationModel> GetReservationAsync(Guid userId, Guid reservationId)
+    public async Task<BookingModel> GetBookingAsync(Guid userId, Guid reservationId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
         {
             throw new NotFoundException("User not found!");
         }
         
-        BookingEntity? reservation = await _reservationRepo.GetReservationAsync(userId, reservationId);
+        BookingEntity? reservation = await _bookingRepo.GetReservationAsync(userId, reservationId);
         if (reservation == null)
         {
             throw new NullReferenceException("Reservation does not exist!!!");
         }
         
-        ReservationModel reservationModel = new ReservationModel
+        BookingModel bookingModel = new BookingModel
         {
             Id = reservation.Id,
             ReservationDate = reservation.BookDate,
@@ -125,22 +125,22 @@ public class ReservationService : IReservationService
             HallName = reservation.Session?.Hall?.Name ?? "unkown"
         };
 
-        return reservationModel;
+        return bookingModel;
 
     }
 
-    public async Task DeleteReservationAsync(Guid userId, Guid reservationId)
+    public async Task DeleteBookingAsync(Guid userId, Guid reservationId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
         {
             throw new NotFoundException("User not found!");
         }
 
-        if (!(await _reservationRepo.CheckIfExistsAsync(reservationId)))
+        if (!(await _bookingRepo.CheckIfExistsAsync(reservationId)))
         {
             throw new NotFoundException("Reservation not found!");
         }
 
-        await _reservationRepo.DeleteReservationAsync(userId, reservationId);
+        await _bookingRepo.DeleteReservationAsync(userId, reservationId);
     }
 }    

@@ -7,50 +7,50 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers;
 
 [ApiController]
-public class ReservationController : ControllerBase
+public class BookingController : ControllerBase
 {
-    private readonly IReservationService _reservationService;
+    private readonly IBookingService _bookingService;
     private readonly ICurrentUserService _currentUserService;
 
-    public ReservationController(IReservationService reservationService, ICurrentUserService currentUserService)
+    public BookingController(IBookingService bookingService, ICurrentUserService currentUserService)
     {
-        _reservationService = reservationService;
+        _bookingService = bookingService;
         _currentUserService = currentUserService;
     }
 
-    [HttpPost("reservations")]
+    [HttpPost("bookings")]
     [Authorize]
-    public async Task<IActionResult> CreateReservation([FromBody] ReservationCreateModel model)
+    public async Task<IActionResult> CreateBooking([FromBody] BookingCreateModel model)
     {
         Guid userId = _currentUserService.GetUserId();
-        await _reservationService.CreateReservationAsync(model, userId);
+        await _bookingService.CreateBookingAsync(model, userId);
         return Created();
     }
 
-    [HttpGet("reservations")]
+    [HttpGet("bookings")]
     [Authorize]
     public async Task<IActionResult> GetAllReservations()
     {
         Guid userId = _currentUserService.GetUserId();
-        ICollection<ReservationModel> reservations = await _reservationService.GetAllReservationsForUserAsync(userId);
+        ICollection<BookingModel> reservations = await _bookingService.GetAllBookingsForUserAsync(userId);
         return Ok(reservations);
     }
 
-    [HttpGet("reservations/{reservationId}")]
+    [HttpGet("bookings/{reservationId}")]
     [Authorize]
     public async Task<IActionResult> GetReservation([FromRoute] Guid reservationId)
     {
         Guid userId = _currentUserService.GetUserId();
-        ReservationModel reservation = await _reservationService.GetReservationAsync(userId, reservationId);
-        return Ok(reservation);
+        BookingModel booking = await _bookingService.GetBookingAsync(userId, reservationId);
+        return Ok(booking);
     }
 
-    [HttpDelete("reservations/{reservationId}")]
+    [HttpDelete("bookings/{reservationId}")]
     [Authorize]
     public async Task<IActionResult> DeleteReservation([FromRoute] Guid reservationId)
     {
         Guid userId = _currentUserService.GetUserId();
-        await _reservationService.DeleteReservationAsync(userId, reservationId);
+        await _bookingService.DeleteBookingAsync(userId, reservationId);
         return Ok();
     }
 

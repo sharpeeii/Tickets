@@ -15,7 +15,7 @@ namespace Business
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IFilmService, FilmService>();
             services.AddScoped<IJwtService, JwtService>();
-            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IVoteService, VoteService>();

@@ -11,15 +11,15 @@ namespace Business.Services
     public class SeatService : ISeatService
     {
         private readonly ISeatRepository _seatRepo;
-        private readonly IReservationRepository _reservationRepo;
+        private readonly IBookingRepository _bookingRepo;
         private readonly IHallRepository _hallRepo;
         private readonly IUnitOfWork _unit;
 
-        public SeatService(ISeatRepository seatRepo, IReservationRepository reservationRepo,
+        public SeatService(ISeatRepository seatRepo, IBookingRepository bookingRepo,
             IHallRepository hallRepo, IUnitOfWork unit)
         {
             _seatRepo = seatRepo;
-            _reservationRepo = reservationRepo;
+            _bookingRepo = bookingRepo;
             _hallRepo = hallRepo;
             _unit = unit;
         }
@@ -100,7 +100,7 @@ namespace Business.Services
         public async Task<ICollection<SeatGetSessionModel>> GetSeatsForSessionAsync(Guid hallId, Guid sessionId)
         {
             ICollection<SeatEntity> seats = await _seatRepo.GetAllSeatsAsync(hallId);
-            ICollection<Guid> reservations = await _reservationRepo
+            ICollection<Guid> reservations = await _bookingRepo
                 .GetAllReservationsForSessionAsync(sessionId);
 
             ICollection<SeatGetSessionModel> checkedSeats = seats.Select(s => new SeatGetSessionModel
