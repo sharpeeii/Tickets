@@ -26,7 +26,7 @@ public class ReservationService : IReservationService
         _sessionRepo = sessionRepo;
     }
 
-    //https://www.youtube.com/watch?v=svwJTnZOaco  ^^
+    //https://www.youtube.com/watch?v=svwJTnZOaco 
     public async Task CreateReservationAsync(ReservationCreateModel model, Guid userId)
     {
         if (!(await _accountRepo.CheckIfUserExists(userId)))
@@ -60,10 +60,10 @@ public class ReservationService : IReservationService
             throw new EntityExistsException("Some seats are already reserved!");
         }
 
-        ICollection<ReservationEntity> newReservations = new List<ReservationEntity>();
+        ICollection<BookingEntity> newReservations = new List<BookingEntity>();
         foreach (Guid seatId in model.SeatIds)
         {
-            ReservationEntity newRes = new ReservationEntity()
+            BookingEntity newRes = new BookingEntity()
             {
                 Id = Guid.NewGuid(),
                 SeatId = seatId,
@@ -83,13 +83,13 @@ public class ReservationService : IReservationService
             throw new NotFoundException("User not found!");
         }
         
-        ICollection<ReservationEntity> reservationEntities = await _reservationRepo
+        ICollection<BookingEntity> reservationEntities = await _reservationRepo
             .GetAllReservationsForUserAsync(userId);
         ICollection<ReservationModel> reservationModels = reservationEntities
             .Select(e => new ReservationModel
             {
                 Id = e.Id,
-                ReservationDate = e.ReservationDate,
+                ReservationDate = e.BookDate,
                 SeatId = e.SeatId,
                 SessionId = e.SessionId,
                 UserId = e.UserId,
@@ -108,7 +108,7 @@ public class ReservationService : IReservationService
             throw new NotFoundException("User not found!");
         }
         
-        ReservationEntity? reservation = await _reservationRepo.GetReservationAsync(userId, reservationId);
+        BookingEntity? reservation = await _reservationRepo.GetReservationAsync(userId, reservationId);
         if (reservation == null)
         {
             throw new NullReferenceException("Reservation does not exist!!!");
@@ -117,7 +117,7 @@ public class ReservationService : IReservationService
         ReservationModel reservationModel = new ReservationModel
         {
             Id = reservation.Id,
-            ReservationDate = reservation.ReservationDate,
+            ReservationDate = reservation.BookDate,
             SeatId = reservation.SeatId,
             SessionId = reservation.SessionId,
             UserId = reservation.UserId,

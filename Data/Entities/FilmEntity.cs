@@ -15,4 +15,5 @@ public class FilmEntity
     public int RatingAmount { get; set; }
     public virtual ICollection<SessionEntity>? Sessions { get; set; }
     public virtual ICollection<VoteEntity>? Votes { get; set; }
+    
 }

@@ -64,11 +64,11 @@ public class SessionRepository : ISessionRepository
         return sessions;
     }
 
-    public async Task<ICollection<SessionEntity>> GetSessionsByDayAsync(DateTime date)
+    public async Task<ICollection<SessionEntity>> GetSessionsByDayAsync(DateTime date, Guid hallId)
     {
         ICollection<SessionEntity> sessions = await _context.Sessions
             .AsNoTracking()
-            .Where(s => s.StartDate.Day == date.Day)
+            .Where(s =>s.HallId == hallId && s.StartDate.Day == date.Day)
             .ToListAsync();
         return sessions;
     }

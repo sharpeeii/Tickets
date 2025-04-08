@@ -13,7 +13,7 @@ namespace Data.Entities
         public string PasswordHash { get; set; } = string.Empty;
         [MaxLength(10)]
         public string Role { get; set; } = "User";
-        public virtual ICollection<ReservationEntity>? Reservations { get; set; }
+        public virtual ICollection<BookingEntity>? Reservations { get; set; }
         public virtual ICollection<VoteEntity>? Votes { get; set; }
     }
 }

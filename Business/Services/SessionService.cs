@@ -47,7 +47,7 @@ public class SessionService : ISessionService
             throw new NullReferenceException("Hall does not exist!");
         }
 
-        if ((await IsSlotAvailableAsync(model.StartDate, film.Duration)) == false)
+        if ((await IsSlotAvailableAsync(model.StartDate, film.Duration, model.HallId)) == false)
         {
             throw new InvalidInputException("This date is not available!");
         }
@@ -109,11 +109,11 @@ public class SessionService : ISessionService
         await _sessionRepo.DeleteSessionAsync(sessionId);
     }
     
-    public async Task<bool> IsSlotAvailableAsync(DateTime requestedStart, TimeSpan filmDuration)
+    public async Task<bool> IsSlotAvailableAsync(DateTime requestedStart, TimeSpan filmDuration, Guid hallId)
     {
         DateTime requestedEnd = requestedStart + filmDuration + TimeSpan.FromMinutes(10);
         ICollection<SessionEntity> sessionsOfTheDay = await _sessionRepo
-            .GetSessionsByDayAsync(requestedStart);
+            .GetSessionsByDayAsync(requestedStart, hallId);
         if (sessionsOfTheDay.Count == 0)
         {
             return true;

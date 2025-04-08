@@ -10,7 +10,7 @@ public interface ISessionRepository
     public Task DeleteSessionAsync(Guid sessionId);
     public Task<bool> SessionDateExistsAsync(DateTime date, Guid hallId);
     public Task<ICollection<SessionEntity>> GetAllSessionsAsync();
-    public Task<ICollection<SessionEntity>> GetSessionsByDayAsync(DateTime date);
+    public Task<ICollection<SessionEntity>> GetSessionsByDayAsync(DateTime date, Guid hallId);
 
 
 }
