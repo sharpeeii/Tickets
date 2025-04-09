@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Business.Interfaces.Auth;
-using Data.Models.Vote;
+using Data.DTOs.Vote;
 using Microsoft.AspNetCore.Authorization;
 using Business.Interfaces;
 
@@ -20,10 +20,10 @@ public class VoteController : ControllerBase
 
     [HttpPost("votes")]
     [Authorize(Roles = "User")]
-    public async Task<IActionResult> CreateVote([FromBody] VoteModel model)
+    public async Task<IActionResult> CreateVote([FromBody] VoteDto dto)
     {
         Guid userId = _currentUserService.GetUserId();
-        await _voteService.CreateVoteAsync(model, userId);
+        await _voteService.CreateVoteAsync(dto, userId);
         return Created();
     }
 
@@ -35,6 +35,4 @@ public class VoteController : ControllerBase
         await _voteService.DeleteVoteAsync(userId, filmId);
         return NoContent();
     }
-    
-    
 }

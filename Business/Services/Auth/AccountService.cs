@@ -2,7 +2,7 @@ using Business.Interfaces.Auth;
 using Common.Exceptions;
 using Common.Helpers;
 using Data.Interfaces;
-using Data.Models.User;
+using Data.DTOs.User;
 using Data.Entities;
 using Data.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -20,56 +20,56 @@ public class AccountService : IAccountService
         _jwtService = jwtService;
     }
 
-    public async Task RegisterAdmin(UserCreateModel model)
+    public async Task RegisterAdmin(UserCreateDto dto)
     {
-        ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
+        ValidationHelper.ValidateSignUpData(dto.Username, dto.Password, dto.Email);
         
-        if (await _accountRepo.EmailExistsAsync(model.Email))
+        if (await _accountRepo.EmailExistsAsync(dto.Email))
         {
             throw new InvalidInputException("Admin with this email already exists!");
         }
         
-        if (await _accountRepo.UsernameExistsAsync(model.Username))
+        if (await _accountRepo.UsernameExistsAsync(dto.Username))
         {
             throw new InvalidInputException("Admin with this username already exists!");
         }
         
         User newAdmin = new User()
         {
-            Username = model.Username,
-            Email = model.Email,
+            Username = dto.Username,
+            Email = dto.Email,
             UserId = Guid.NewGuid(),
             Role = "Admin"
         };
         string passHash = new PasswordHasher<User>()
-            .HashPassword(newAdmin, model.Password);
+            .HashPassword(newAdmin, dto.Password);
         newAdmin.PasswordHash = passHash;
         await _accountRepo.CreateAccountAsync(newAdmin);
 
     }
 
-    public async Task RegisterUser(UserCreateModel model)
+    public async Task RegisterUser(UserCreateDto dto)
     {
-        ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
+        ValidationHelper.ValidateSignUpData(dto.Username, dto.Password, dto.Email);
         
-        if (await _accountRepo.EmailExistsAsync(model.Email))
+        if (await _accountRepo.EmailExistsAsync(dto.Email))
         {
             throw new InvalidInputException("User with this email already exists!");
         }
 
-        if (await _accountRepo.UsernameExistsAsync(model.Username))
+        if (await _accountRepo.UsernameExistsAsync(dto.Username))
         {
             throw new InvalidInputException("User with this username already exists!");
         }
         
         User newUser = new User()
         {
-            Username = model.Username,
-            Email = model.Email,
+            Username = dto.Username,
+            Email = dto.Email,
             UserId = Guid.NewGuid(),
         };
         string passHash = new PasswordHasher<User>()
-            .HashPassword(newUser, model.Password);
+            .HashPassword(newUser, dto.Password);
         newUser.PasswordHash = passHash;
         await _accountRepo.CreateAccountAsync(newUser);
     }

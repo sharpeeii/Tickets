@@ -2,7 +2,7 @@ using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Film;
+using Data.DTOs.Film;
 
 namespace Business.Services;
 

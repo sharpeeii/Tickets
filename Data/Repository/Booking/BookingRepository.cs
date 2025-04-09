@@ -74,13 +74,13 @@ public class BookingRepository : IBookingRepository
         return await _context.Bookings.AnyAsync(b => b.BookingId == bookingId);
     }
 
-    public async Task<ICollection<Guid>> GetAllBookingForSessionAsync(Guid sessionId)
+    public async Task<ICollection<Guid>> GetAllBookedSeatsForSessionAsync(Guid sessionId)
     {
         ICollection<Guid> bookedSeatsIds = await _context.BookedSeats
             .AsNoTracking()
             .Include(bs => bs.Booking)
             .Where(bs => bs.Booking.SessionId == sessionId)
-            .Select(bs => bs.BookingId)
+            .Select(bs => bs.BookedSeatId)
             .ToListAsync();
         return bookedSeatsIds;
     }

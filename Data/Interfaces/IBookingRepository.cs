@@ -9,6 +9,6 @@ public interface IBookingRepository
     public Task<Booking?> GetBookingAsync(Guid userId, Guid bookingId);
     public Task DeleteBookingAsync(Guid userId, Guid bookingId);
     public Task<bool> BookingExistsAsync(Guid bookingId);
-    public Task<ICollection<Guid>> GetAllBookingForSessionAsync(Guid sessionId);
+    public Task<ICollection<Guid>> GetAllBookedSeatsForSessionAsync(Guid sessionId);
 
 }

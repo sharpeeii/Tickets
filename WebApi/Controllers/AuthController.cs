@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Data.Models;
-using Data.Models.User;
+using Data.DTOs;
+using Data.DTOs.User;
 using Business.Interfaces.Auth;
-using Microsoft.AspNetCore.HttpLogging;
 
 namespace WebApi.Controllers;
-
 
 [ApiController]
 public class AuthController : ControllerBase
@@ -18,19 +16,16 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserCreateModel model)
+    public async Task<IActionResult> Register(UserCreateDto dto)
     {
-        await _accountService.RegisterUser(model);
+        await _accountService.RegisterUser(dto);
         return NoContent();
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginModel model)
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
     {
-        string token = await _accountService.Login(model.Email, model.Password);
+        string token = await _accountService.Login(dto.Email, dto.Password);
         return Ok(token);
     }
-    
-
-
 }

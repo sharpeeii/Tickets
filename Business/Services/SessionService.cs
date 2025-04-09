@@ -2,7 +2,7 @@ using Business.Interfaces;
 using Common.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Session;
+using Data.DTOs.Session;
 
 namespace Business.Services;
 
@@ -22,32 +22,32 @@ public class SessionService : ISessionService
         _hallRepo = hallRepo;
     }
 
-    public async Task CreateSessionAsync(SessionCreateModel model)
+    public async Task CreateSessionAsync(SessionCreateDto dto)
     {
-        if (await _sessionRepo.SessionDateExistsAsync(model.StartDate, model.HallId))
+        if (await _sessionRepo.SessionDateExistsAsync(dto.StartDate, dto.HallId))
         {
             throw new EntityExistsException("The session already exists at this time!");
         }
         
-        if (model.StartDate <= DateTime.UtcNow)
+        if (dto.StartDate <= DateTime.UtcNow)
         {
             throw new InvalidInputException("Please provide a future date!");
         }
 
         
-        Film? film = await _filmRepo.GetFilmAsync(model.FilmId);
+        Film? film = await _filmRepo.GetFilmAsync(dto.FilmId);
         if (film == null)
         {
             throw new NullReferenceException("Film does not exist!");
         }
         
-        Hall? hall = await _hallRepo.GetHallAsync(model.HallId);
+        Hall? hall = await _hallRepo.GetHallAsync(dto.HallId);
         if (hall == null)
         {
             throw new NullReferenceException("Hall does not exist!");
         }
 
-        if ((await IsSlotAvailableAsync(model.StartDate, film.Duration, model.HallId)) == false)
+        if ((await IsSlotAvailableAsync(dto.StartDate, film.Duration, dto.HallId)) == false)
         {
             throw new InvalidInputException("This date is not available!");
         }
@@ -55,19 +55,19 @@ public class SessionService : ISessionService
         Session newSession = new Session()
         {
             SessionId = Guid.NewGuid(),
-            StartDate = model.StartDate,
-            FilmId = model.FilmId,
-            HallId = model.HallId,                //additional time for hall cleaning/prepeartion
-            EndDate = model.StartDate + film.Duration + TimeSpan.FromMinutes(10) 
+            StartDate = dto.StartDate,
+            FilmId = dto.FilmId,
+            HallId = dto.HallId,                //additional time for hall cleaning/prepeartion
+            EndDate = dto.StartDate + film.Duration + TimeSpan.FromMinutes(10) 
         };
         await _sessionRepo.CreateSessionAsync(newSession);
     }
     
-    public async Task<ICollection<SessionGetAllModel>> GetAllSessionsAsync(Guid filmId)
+    public async Task<ICollection<SessionGetAllDto>> GetAllSessionsAsync(Guid filmId)
     {
         ICollection<Session> sessions = await _sessionRepo.GetSessionsByFilmAsync(filmId);
         
-        ICollection<SessionGetAllModel> models = sessions.Select(s => new SessionGetAllModel
+        ICollection<SessionGetAllDto> models = sessions.Select(s => new SessionGetAllDto()
         {
             HallId = s.HallId,
             StartDate = s.StartDate,
@@ -80,7 +80,7 @@ public class SessionService : ISessionService
         return models;
     }
 
-    public async Task<SessionGetModel> GetSessionAsync(Guid sessionId)
+    public async Task<SessionGetDto> GetSessionAsync(Guid sessionId)
     {
         Session? sessionEntity = await _sessionRepo.GetSessionAsync(sessionId);
         if (sessionEntity == null)
@@ -88,7 +88,7 @@ public class SessionService : ISessionService
             throw new NullReferenceException("Session does not exist!");
         }
 
-        SessionGetModel sessionGetModel = new SessionGetModel()
+        SessionGetDto sessionGetDto = new SessionGetDto()
         {
             Id = sessionEntity.SessionId,
             StartDate = sessionEntity.StartDate,
@@ -100,7 +100,7 @@ public class SessionService : ISessionService
             Seats = await _seatService.GetSeatsForSessionAsync(sessionEntity.HallId, sessionId)
         };
 
-        return sessionGetModel;
+        return sessionGetDto;
     }
     
 
@@ -126,7 +126,6 @@ public class SessionService : ISessionService
                 return false;
             }
         }
-
         return true;
     }
 }

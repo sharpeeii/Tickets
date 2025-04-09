@@ -1,7 +1,7 @@
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Data.Models.Film;
+using Data.DTOs.Film;
 
 namespace WebApi.Controllers;
 
@@ -28,5 +28,4 @@ public class FilmController : ControllerBase
         FilmGetDto? film = await _filmService.GetFilmAsync(id);
         return Ok(film);
     }
-
 }

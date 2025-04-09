@@ -1,9 +1,10 @@
 using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
+using Data.DTOs.Booking;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Reservation;
+using Data.DTOs.Booking;
 using Data.Repository;
 
 namespace Business.Services;
@@ -35,7 +36,7 @@ public class BookingService : IBookingService
         }
                 
         ICollection<Guid> bookings = await _bookingRepo
-            .GetAllBookingForSessionAsync(dto.SessionId);
+            .GetAllBookedSeatsForSessionAsync(dto.SessionId);
         
         Session? session = await _sessionRepo.GetSessionAsync(dto.SessionId);
 

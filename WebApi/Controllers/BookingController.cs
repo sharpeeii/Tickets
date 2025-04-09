@@ -1,6 +1,6 @@
 using Business.Interfaces.Auth;
 using Business.Interfaces;
-using Data.Models.Reservation;
+using Data.DTOs.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,5 +53,4 @@ public class BookingController : ControllerBase
         await _bookingService.DeleteBookingAsync(userId, reservationId);
         return Ok();
     }
-
 }
