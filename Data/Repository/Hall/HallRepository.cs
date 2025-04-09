@@ -13,13 +13,13 @@ public class HallRepository : IHallRepository
         _context = context;
     }
 
-    public async Task CreateHallAsync(HallEntity hall)
+    public async Task CreateHallAsync(Hall hall)
     {
         await _context.Halls.AddAsync(hall);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ICollection<HallEntity>> GetAllHallsAsync()
+    public async Task<ICollection<Hall>> GetAllHallsAsync()
     {
         var halls = await _context.Halls
             .AsNoTracking()
@@ -27,32 +27,32 @@ public class HallRepository : IHallRepository
         return halls;
     }
 
-    public async Task<HallEntity> GetHallAsync(Guid hallId)
+    public async Task<Hall> GetHallAsync(Guid hallId)
     {
         var hall = await _context.Halls
             .AsNoTracking()
             .Include(h=>h.Seats)
-            .FirstOrDefaultAsync(h => h.Id == hallId);
+            .FirstOrDefaultAsync(h => h.HallId == hallId);
         return hall;
     }
     
     public async Task UpdateHallNameAsync(Guid hallId, string name)
     {
-        var hall = await _context.Halls.Where(h => h.Id == hallId).FirstOrDefaultAsync();
+        var hall = await _context.Halls.Where(h => h.HallId == hallId).FirstOrDefaultAsync();
         hall.Name = name;
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateHallSeatsNumAsync(Guid hallId, int seatsNum)
     {
-        var hall = await _context.Halls.Where(h => h.Id == hallId).FirstOrDefaultAsync();
+        var hall = await _context.Halls.Where(h => h.HallId == hallId).FirstOrDefaultAsync();
         hall.NumberOfSeats = seatsNum;
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteHallAsync(Guid hallId)
     {
-        await _context.Halls.Where(h => h.Id == hallId).ExecuteDeleteAsync();
+        await _context.Halls.Where(h => h.HallId == hallId).ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
     public async Task<bool> CheckForDuplicateAsync(string name)
@@ -62,12 +62,12 @@ public class HallRepository : IHallRepository
 
     public async Task<bool> CheckIfExistsAsync(Guid hallId)
     {
-        return await _context.Halls.AnyAsync(h => h.Id == hallId);
+        return await _context.Halls.AnyAsync(h => h.HallId == hallId);
     }
     
     public async Task HallSeatsDecrementAsync(Guid hallId)
     {
-        HallEntity? hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == hallId);
+        Hall? hall = await _context.Halls.FirstOrDefaultAsync(h => h.HallId == hallId);
         if (hall == null)
         {
             throw new NullReferenceException("Hall not found!");
@@ -78,7 +78,7 @@ public class HallRepository : IHallRepository
     
     public async Task HallSeatsIncrementAsync(Guid hallId)
     {
-        HallEntity? hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == hallId);
+        Hall? hall = await _context.Halls.FirstOrDefaultAsync(h => h.HallId == hallId);
         if (hall == null)
         {
             throw new NullReferenceException("Hall not found!");

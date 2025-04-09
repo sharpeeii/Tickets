@@ -4,7 +4,7 @@ namespace Data.Entities;
 
 public class Vote
 {
-    public Guid Id { get; set; }
+    public Guid VoteId { get; set; }
     [MaxLength(120)]
     public string? FilmName { get; set; }
     public virtual Film? Film { get; set; }

@@ -4,5 +4,5 @@ namespace Business.Interfaces.Auth;
 
 public interface IJwtService
 {
-    public string GenerateToken(UserEntity userAcc);
+    public string GenerateToken(User userAcc);
 }

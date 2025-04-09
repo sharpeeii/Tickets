@@ -24,24 +24,24 @@ public class AccountService : IAccountService
     {
         ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
         
-        if (await _accountRepo.CheckIfEmailExists(model.Email))
+        if (await _accountRepo.EmailExistsAsync(model.Email))
         {
             throw new InvalidInputException("Admin with this email already exists!");
         }
         
-        if (await _accountRepo.CheckIfUsernameExists(model.Username))
+        if (await _accountRepo.UsernameExistsAsync(model.Username))
         {
             throw new InvalidInputException("Admin with this username already exists!");
         }
         
-        UserEntity newAdmin = new UserEntity()
+        User newAdmin = new User()
         {
             Username = model.Username,
             Email = model.Email,
-            Id = Guid.NewGuid(),
+            UserId = Guid.NewGuid(),
             Role = "Admin"
         };
-        string passHash = new PasswordHasher<UserEntity>()
+        string passHash = new PasswordHasher<User>()
             .HashPassword(newAdmin, model.Password);
         newAdmin.PasswordHash = passHash;
         await _accountRepo.CreateAccountAsync(newAdmin);
@@ -52,23 +52,23 @@ public class AccountService : IAccountService
     {
         ValidationHelper.ValidateSignUpData(model.Username, model.Password, model.Email);
         
-        if (await _accountRepo.CheckIfEmailExists(model.Email))
+        if (await _accountRepo.EmailExistsAsync(model.Email))
         {
             throw new InvalidInputException("User with this email already exists!");
         }
 
-        if (await _accountRepo.CheckIfUsernameExists(model.Username))
+        if (await _accountRepo.UsernameExistsAsync(model.Username))
         {
             throw new InvalidInputException("User with this username already exists!");
         }
         
-        UserEntity newUser = new UserEntity()
+        User newUser = new User()
         {
             Username = model.Username,
             Email = model.Email,
-            Id = Guid.NewGuid(),
+            UserId = Guid.NewGuid(),
         };
-        string passHash = new PasswordHasher<UserEntity>()
+        string passHash = new PasswordHasher<User>()
             .HashPassword(newUser, model.Password);
         newUser.PasswordHash = passHash;
         await _accountRepo.CreateAccountAsync(newUser);
@@ -76,13 +76,13 @@ public class AccountService : IAccountService
  
     public async Task<string> Login(string email, string password)
     {
-        UserEntity? userAcc = await _accountRepo.GetByEmailAsync(email);
+        User? userAcc = await _accountRepo.GetByEmailAsync(email);
         if (userAcc == null)
         { 
             throw new InvalidLoginExecption("User with this email and password does not exist!"); 
         }
         
-        PasswordVerificationResult result = new PasswordHasher<UserEntity>()
+        PasswordVerificationResult result = new PasswordHasher<User>()
             .VerifyHashedPassword(userAcc, userAcc.PasswordHash, password);
         
         if (result == PasswordVerificationResult.Success)

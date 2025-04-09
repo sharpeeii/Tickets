@@ -1,6 +1,6 @@
-namespace Data.Models.User
+namespace Data.DTOs.User
 {
-    public class UserModel
+    public class UserDto
     {
         public Guid Id { get; set; }
         public string Username { get; set; } = string.Empty;

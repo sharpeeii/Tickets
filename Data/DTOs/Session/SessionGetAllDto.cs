@@ -1,6 +1,6 @@
-namespace Data.Models.Session;
+namespace Data.DTOs.Session;
 
-public class SessionGetAllModel
+public class SessionGetAllDto
 {
     public Guid Id { get; set; }
     public DateTime StartDate { get; set; }

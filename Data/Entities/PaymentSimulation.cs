@@ -8,6 +8,6 @@ public class PaymentSimulation
     public Guid BookingId { get; set; }
     public required Booking Booking { get; set; }
     public Guid UserId { get; set; }
-    public required UserEntity User { get; set; }
+    public required User User { get; set; }
     public decimal TotalSum { get; set; }
 }

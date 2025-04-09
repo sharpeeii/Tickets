@@ -1,6 +1,6 @@
-namespace Data.Models.Film;
+namespace Data.DTOs.Film;
 
-public class FilmGetModel
+public class FilmGetDto
 {
     public Guid Id { get; set; }
     public required string Name { get; set; }

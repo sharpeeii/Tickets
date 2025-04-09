@@ -1,14 +1,12 @@
 using Data.Entities;
-using Data.Models.Hall;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Data.Interfaces
 {
     public interface IHallRepository
     {
-        public Task CreateHallAsync(HallEntity hall);
-        public Task<ICollection<HallEntity>> GetAllHallsAsync();
-        public Task<HallEntity> GetHallAsync(Guid hallId);
+        public Task CreateHallAsync(Hall hall);
+        public Task<ICollection<Hall>> GetAllHallsAsync();
+        public Task<Hall> GetHallAsync(Guid hallId);
         public Task UpdateHallNameAsync(Guid hallId, string name);
         public Task UpdateHallSeatsNumAsync(Guid hallId, int seatsNum);
         public Task DeleteHallAsync(Guid hallId);

@@ -1,4 +1,3 @@
-using System.Collections;
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ public class BookingRepository : IBookingRepository
         _unit = unit;
     }
 
-    public async Task CreateBookingAsync(BookingEntity booking, ICollection<BookedSeatEntity> bookedSeats)
+    public async Task CreateBookingAsync(Booking booking, ICollection<BookedSeat> bookedSeats)
     {
         await _unit.BeginTransactionAsync();
         try
@@ -34,10 +33,10 @@ public class BookingRepository : IBookingRepository
         }
         await _context.SaveChangesAsync();
     }
-
-    public async Task<ICollection<BookingEntity>> GetAllReservationsForUserAsync(Guid userId)
+    
+    public async Task<ICollection<Booking>> GetAllBookingsForUserAsync(Guid userId)
     {
-        ICollection<BookingEntity> bookings = await _context.Bookings
+        ICollection<Booking> bookings = await _context.Bookings
             .AsNoTracking()
             .Where(b => b.UserId == userId)
             .Include(b => b.Session)
@@ -49,40 +48,39 @@ public class BookingRepository : IBookingRepository
         return bookings;
     }
 
-    public async Task<BookingEntity?> GetReservationAsync(Guid userId, Guid reservationId)
+    public async Task<Booking?> GetBookingAsync(Guid userId, Guid bookingId)
     {
-        BookingEntity? reservation = await _context.Bookings
+        Booking? booking = await _context.Bookings
             .AsNoTracking()
-            .Where(r => r.UserId == userId && r.Id == reservationId)
-            .Include(r => r.Session)
-            .ThenInclude(s => s.Hall)
-            .Include(r => r.Session)
-            .ThenInclude(s => s.Film)
+            .Where(b => b.UserId == userId && b.BookingId == bookingId)
+            .Include(b => b.Session)
+                .ThenInclude(b => b.Hall)
+            .Include(b => b.Session)
+                .ThenInclude(b => b.Film)
             .FirstOrDefaultAsync();
-
-        return reservation;
+        return booking;
     }
 
-    public async Task DeleteReservationAsync(Guid userId, Guid reservationId)
+    public async Task DeleteBookingAsync(Guid userId, Guid bookingId)
     {
         await _context.Bookings
-            .Where(r => r.UserId == userId && r.Id == reservationId)
+            .Where(b => b.UserId == userId && b.BookingId == bookingId)
             .ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> CheckIfExistsAsync(Guid reservationId)
+    public async Task<bool> BookingExistsAsync(Guid bookingId)
     {
-        return await _context.Bookings.AnyAsync(r => r.Id == reservationId);
+        return await _context.Bookings.AnyAsync(b => b.BookingId == bookingId);
     }
 
-    public async Task<ICollection<Guid>> GetAllReservationsForSessionAsync(Guid sessionId)
+    public async Task<ICollection<Guid>> GetAllBookingForSessionAsync(Guid sessionId)
     {
         ICollection<Guid> bookedSeatsIds = await _context.BookedSeats
             .AsNoTracking()
-            .Include(bs => bs.BookingEntity)
-            .Where(bs => bs.BookingEntity.SessionId == sessionId)
-            .Select(bs => bs.Id)
+            .Include(bs => bs.Booking)
+            .Where(bs => bs.Booking.SessionId == sessionId)
+            .Select(bs => bs.BookingId)
             .ToListAsync();
         return bookedSeatsIds;
     }

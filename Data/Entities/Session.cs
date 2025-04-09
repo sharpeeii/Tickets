@@ -7,7 +7,7 @@ namespace Data.Entities
 {
     public class Session
     {
-        public Guid Id { get; set; }
+        public Guid SessionId { get; set; }
         public Guid HallId { get; set; }
         public Guid FilmId { get; set; }
         public DateTime StartDate { get; set; }

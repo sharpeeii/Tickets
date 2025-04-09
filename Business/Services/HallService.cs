@@ -18,27 +18,27 @@ public class HallService : IHallService
         _seatService = seatService;
     }
 
-    public async Task CreateHallAsync(HallCreateModel model)
+    public async Task CreateHallAsync(HallCreateDto dto)
     {
-        ValidationHelper.ValidateStringLength(model.Name, maxLength: 20);
-        ValidationHelper.ValidateMaxValue(model.NumberOfSeats, maxValue: 250);
-        ValidationHelper.ValidateRowsAmount(model.NumberOfSeats, model.Rows);
+        ValidationHelper.ValidateStringLength(dto.Name, maxLength: 20);
+        ValidationHelper.ValidateMaxValue(dto.NumberOfSeats, maxValue: 250);
+        ValidationHelper.ValidateRowsAmount(dto.NumberOfSeats, dto.Rows);
         
-        bool hallExists = await _hallRepo.CheckForDuplicateAsync(model.Name);
+        bool hallExists = await _hallRepo.CheckForDuplicateAsync(dto.Name);
         if (hallExists)
         {
-            throw new EntityExistsException($"Hall with name '{model.Name}' already exists");
+            throw new EntityExistsException($"Hall with name '{dto.Name}' already exists");
         }
 
-        var newHall = new HallEntity
+        var newHall = new Hall
         {
-            Name = model.Name,
-            NumberOfSeats = model.NumberOfSeats,
-            Id = Guid.NewGuid()
+            Name = dto.Name,
+            NumberOfSeats = dto.NumberOfSeats,
+            HallId = Guid.NewGuid()
         };
         
         await _hallRepo.CreateHallAsync(newHall);
-        await _seatService.AutomaticCreationAsync(model.NumberOfSeats, model.Rows, newHall.Id);
+        await _seatService.AutomaticCreationAsync(dto.NumberOfSeats, dto.Rows, newHall.HallId);
     }
 
     public async Task<ICollection<HallGetModel>> GetAllHallsAsync()
@@ -46,7 +46,7 @@ public class HallService : IHallService
         var halls = await _hallRepo.GetAllHallsAsync();
         var hallModels = halls.Select(h => new HallGetModel
         {
-            Id = h.Id,
+            Id = h.HallId,
             Name = h.Name,
             NumberOfSeats = h.NumberOfSeats
         }).ToList();
@@ -54,9 +54,9 @@ public class HallService : IHallService
         return hallModels;
     }
 
-    public async Task<HallGetEagerModel> GetHallAsync(Guid hallId)
+    public async Task<HallGetEagerDto> GetHallAsync(Guid hallId)
     {
-        HallEntity? hall = await _hallRepo.GetHallAsync(hallId);
+        Hall? hall = await _hallRepo.GetHallAsync(hallId);
         if (hall == null)
         {
             throw new NotFoundException("Hall not found!");
@@ -64,20 +64,20 @@ public class HallService : IHallService
         ICollection<SeatModel> seatModels = hall.Seats  
             .Select(s => new SeatModel
             {
-                Id = s.Id,
+                Id = s.SeatId,
                 HallId = s.HallId,
                 Number = s.Number,
                 Row = s.Row
             }).ToList();
         
-        HallGetEagerModel hallModel = new HallGetEagerModel()
+        HallGetEagerDto hallDto = new HallGetEagerDto()
         {
-            Id = hall.Id,
+            Id = hall.HallId,
             Name = hall.Name,
             NumberOfSeats = hall.NumberOfSeats,
             SeatModels = seatModels
         };
-        return hallModel;
+        return hallDto;
     }
 
     public async Task UpdateHallAsync(Guid hallId, HallUpdModel model)

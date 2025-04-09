@@ -13,7 +13,7 @@ public class VoteRepository : IVoteRepository
         _context = context;
     }
 
-    public async Task CreateVoteAsync(VoteEntity vote)
+    public async Task CreateVoteAsync(Vote vote)
     {
         await _context.Votes.AddAsync(vote);
         await _context.SaveChangesAsync();
@@ -22,7 +22,7 @@ public class VoteRepository : IVoteRepository
     public async Task DeleteVoteAsync(Guid voteId)
     {
         await _context.Votes
-            .Where(v=> v.Id == voteId)
+            .Where(v=> v.VoteId == voteId)
             .ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
@@ -32,9 +32,9 @@ public class VoteRepository : IVoteRepository
         return await _context.Votes.AnyAsync(v =>  v.UserId == userId&& v.FilmId == filmId);
     }
 
-    public async Task<VoteEntity> GetVoteAsync(Guid userId, Guid filmId)
+    public async Task<Vote> GetVoteAsync(Guid userId, Guid filmId)
     {
-        VoteEntity? vote = await _context.Votes
+        Vote? vote = await _context.Votes
             .Where(v => v.UserId == userId && v.FilmId == filmId)
             .FirstOrDefaultAsync();
         return vote;

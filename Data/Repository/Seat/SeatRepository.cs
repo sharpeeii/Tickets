@@ -1,7 +1,5 @@
-using Common.Helpers;
-using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Seat;
+using Data.DTOs.Seat;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Seat;
@@ -14,49 +12,49 @@ public class SeatRepository : ISeatRepository
         _context = context;
     }
 
-    public async Task CreateSeatAsync(SeatEntity seat)
+    public async Task CreateSeatAsync(Entities.Seat seat)
     {
         await _context.Seats.AddAsync(seat);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ICollection<SeatEntity>> GetAllSeatsAsync(Guid hallId)
+    public async Task<ICollection<Entities.Seat>> GetAllSeatsAsync(Guid hallId)
     {
-        ICollection<SeatEntity> seats = await _context.Seats
+        ICollection<Entities.Seat> seats = await _context.Seats
             .AsNoTracking()
             .Where(s=>s.HallId== hallId)
             .ToListAsync();
         return seats;
     }
     
-    public async Task<SeatEntity?> GetSeatAsync(Guid seatId)
+    public async Task<Entities.Seat?> GetSeatAsync(Guid seatId)
     {
-        SeatEntity? seat = await _context.Seats
-            .Where(s => s.Id == seatId)
+        Entities.Seat? seat = await _context.Seats
+            .Where(s => s.SeatId == seatId)
             .FirstOrDefaultAsync();
         return seat;
     }
 
-    public async Task<ICollection<SeatEntity?>> GetMultipleSeatsAsync(ICollection<Guid> seatIds)
+    public async Task<ICollection<Entities.Seat?>> GetMultipleSeatsAsync(ICollection<Guid> seatIds)
     {
-        ICollection<SeatEntity> seats = await _context.Seats
-            .Where(s => seatIds.Contains(s.Id))
+        ICollection<Entities.Seat> seats = await _context.Seats
+            .Where(s => seatIds.Contains(s.SeatId))
             .ToListAsync();
         return seats;
     }
 
-    public async Task UpdateSeatAsync(Guid seatId, SeatUpdModel model)
+    public async Task UpdateSeatAsync(Guid seatId, SeatUpdDto dto)
     {
-        SeatEntity? seat = await _context.Seats.FirstOrDefaultAsync(s => s.Id == seatId);
-        seat.Number = model.Number;
-        seat.Row = model.Row;
+        Entities.Seat? seat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatId == seatId);
+        seat.Number = dto.Number;
+        seat.Row = dto.Row;
         await _context.SaveChangesAsync();
     }
     
     public async Task DeleteSeatAsync(Guid seatId)
     {
         await _context.Seats
-            .Where(s => s.Id == seatId)
+            .Where(s => s.SeatId == seatId)
             .ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }

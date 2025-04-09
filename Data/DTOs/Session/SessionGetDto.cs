@@ -1,8 +1,7 @@
-using Data.Models.Seat;
+using Data.DTOs.Seat;
 
-namespace Data.Models.Session
-{
-    public class SessionGetModel
+namespace Data.DTOs.Session;
+    public class SessionGetDto
     {
         public Guid Id { get; set; }
         public DateTime StartDate { get; set; }
@@ -11,6 +10,5 @@ namespace Data.Models.Session
         public Guid FilmId { get; set; }
         public required string FilmName { get; set; }
         public required string HallHame { get; set; }
-        public required ICollection<SeatGetSessionModel> Seats { get; set; }
+        public required ICollection<SeatGetSessionDto> Seats { get; set; }
     }
-}

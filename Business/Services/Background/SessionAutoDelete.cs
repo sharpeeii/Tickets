@@ -33,14 +33,14 @@ public class SessionAutoDelete : BackgroundService
         using (IServiceScope scope = _serviceProvider.CreateScope())
         {
             ISessionRepository sessionRepo = scope.ServiceProvider.GetRequiredService<ISessionRepository>();
-            ICollection<SessionEntity> sessions = await sessionRepo.GetAllSessionsAsync();
+            ICollection<Session> sessions = await sessionRepo.GetAllSessionsAsync();
         
-            foreach (SessionEntity session in sessions)
+            foreach (Session session in sessions)
             {
                 if (session.StartDate <= DateTime.UtcNow)
                 {
-                    await sessionRepo.DeleteSessionAsync(session.Id);
-                    _logger.LogInformation($"Deleted expired session {session.Id}");
+                    await sessionRepo.DeleteSessionAsync(session.SessionId);
+                    _logger.LogInformation($"Deleted expired session {session.SessionId}");
                 }
             }
         }

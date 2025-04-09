@@ -15,75 +15,75 @@ public class FilmService : IFilmService
         _filmRepo = filmRepo;
     }
     
-    public async Task CreateFilmAsync(FilmModel model)
+    public async Task CreateFilmAsync(FilmDto dto)
     {
-        if (await _filmRepo.NameExistsAsync(model.Name))
+        if (await _filmRepo.NameExistsAsync(dto.Name))
         {
             throw new EntityExistsException("Film already exists!");
         }
-        FilmEntity newFilm = new FilmEntity
+        Film newFilm = new Film
         {
-            Name = model.Name,
-            Genre = model.Genre,
-            Duration = model.Duration,
+            Name = dto.Name,
+            Genre = dto.Genre,
+            Duration = dto.Duration,
             Rating = 0,
-            Id = Guid.NewGuid()
+            FilmId = Guid.NewGuid()
         };
         await _filmRepo.CreateFilmAsync(newFilm);
     }
 
-    public async Task<ICollection<FilmGetModel>> GetAllFilmsAsync()
+    public async Task<ICollection<FilmGetDto>> GetAllFilmsAsync()
     {
-        ICollection<FilmEntity> filmsEntities = await _filmRepo
+        ICollection<Film> filmsEntities = await _filmRepo
             .GetAllFilmsAsync();
-        ICollection<FilmGetModel> filmModels = filmsEntities
-            .Select(f=> new FilmGetModel
+        ICollection<FilmGetDto> filmModels = filmsEntities
+            .Select(f=> new FilmGetDto
             {
                 Name = f.Name,
                 Genre = f.Genre,
                 Duration = f.Duration,
                 Rating = f.Rating,
                 RatingAmount = f.RatingAmount,
-                Id = f.Id
+                Id = f.FilmId
             }).ToList();
         
         return filmModels;
     }
 
-    public async Task<FilmGetModel?> GetFilmAsync(Guid id)
+    public async Task<FilmGetDto?> GetFilmAsync(Guid id)
     {
         
-        FilmEntity? filmEntity = await _filmRepo.GetFilmAsync(id);
+        Film? filmEntity = await _filmRepo.GetFilmAsync(id);
         if (filmEntity == null)
         {
             throw new NotFoundException("Film not found!");
         }
         
-        FilmGetModel filmModel = new FilmGetModel()
+        FilmGetDto filmDto = new FilmGetDto()
         {
             Name = filmEntity.Name,
             Genre = filmEntity.Genre,
             Duration = filmEntity.Duration,
             Rating = filmEntity.Rating,
             RatingAmount = filmEntity.RatingAmount,
-            Id = filmEntity.Id
+            Id = filmEntity.FilmId
         };
-        return filmModel;
+        return filmDto;
     }
 
-    public async Task UpdateFilmAsync(Guid id, FilmModel model)
+    public async Task UpdateFilmAsync(Guid id, FilmDto dto)
     {
         if (!(await _filmRepo.CheckIfExistsAsync(id)))
         {
             throw new NotFoundException("Film not found!");
         }
 
-        if (await _filmRepo.NameExistsAsync(model.Name))
+        if (await _filmRepo.NameExistsAsync(dto.Name))
         {
             throw new EntityExistsException("Film already exists!");
         }
         
-        await _filmRepo.UpdateFilmAsync(id, model);
+        await _filmRepo.UpdateFilmAsync(id, dto);
     }
 
     public async Task DeleteFilmAsync(Guid id)

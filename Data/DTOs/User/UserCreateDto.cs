@@ -1,6 +1,6 @@
-namespace Data.Models.User
+namespace Data.DTOs.User
 {
-    public class UserCreateModel
+    public class UserCreateDto
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;

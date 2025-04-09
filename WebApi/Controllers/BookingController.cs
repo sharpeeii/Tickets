@@ -20,10 +20,10 @@ public class BookingController : ControllerBase
 
     [HttpPost("bookings")]
     [Authorize]
-    public async Task<IActionResult> CreateBooking([FromBody] BookingCreateModel model)
+    public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDto dto)
     {
         Guid userId = _currentUserService.GetUserId();
-        await _bookingService.CreateBookingAsync(model, userId);
+        await _bookingService.CreateBookingAsync(dto, userId);
         return Created();
     }
 
@@ -32,7 +32,7 @@ public class BookingController : ControllerBase
     public async Task<IActionResult> GetAllReservations()
     {
         Guid userId = _currentUserService.GetUserId();
-        ICollection<BookingModel> reservations = await _bookingService.GetAllBookingsForUserAsync(userId);
+        ICollection<BookingDto> reservations = await _bookingService.GetAllBookingsForUserAsync(userId);
         return Ok(reservations);
     }
 
@@ -41,7 +41,7 @@ public class BookingController : ControllerBase
     public async Task<IActionResult> GetReservation([FromRoute] Guid reservationId)
     {
         Guid userId = _currentUserService.GetUserId();
-        BookingModel booking = await _bookingService.GetBookingAsync(userId, reservationId);
+        BookingDto booking = await _bookingService.GetBookingAsync(userId, reservationId);
         return Ok(booking);
     }
 

@@ -41,17 +41,17 @@ public class AdminController : ControllerBase
     
     [HttpPost("films")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateFilm([FromBody] FilmModel model)
+    public async Task<IActionResult> CreateFilm([FromBody] FilmDto dto)
     {
-        await _filmService.CreateFilmAsync(model);
+        await _filmService.CreateFilmAsync(dto);
         return Created();
     }
     
     [HttpPut("films/{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateFilm([FromRoute] Guid id, [FromBody] FilmModel model)
+    public async Task<IActionResult> UpdateFilm([FromRoute] Guid id, [FromBody] FilmDto dto)
     {
-        await _filmService.UpdateFilmAsync(id, model);
+        await _filmService.UpdateFilmAsync(id, dto);
         return Ok();
     }
 
@@ -67,9 +67,9 @@ public class AdminController : ControllerBase
     
     [HttpPost("halls")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateHall([FromBody] HallCreateModel model)
+    public async Task<IActionResult> CreateHall([FromBody] HallCreateDto dto)
     {
-        await _hallService.CreateHallAsync(model);
+        await _hallService.CreateHallAsync(dto);
         return Created();
     }
 

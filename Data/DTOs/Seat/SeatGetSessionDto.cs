@@ -1,6 +1,6 @@
-namespace Data.Models.Seat;
+namespace Data.DTOs.Seat;
 
-public class SeatGetSessionModel
+public class SeatGetSessionDto
 {
     public Guid Id { get; set; }
     public int Row { get; set; }

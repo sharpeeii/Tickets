@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entities;
 
-public class FilmEntity
+public class Film
 {
-    public Guid Id { get; set; }
+    public Guid FilmId { get; set; }
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
     [MaxLength(100)]
@@ -13,7 +13,7 @@ public class FilmEntity
     public float Rating { get; set; }
     public int RatingSum { get; set; }
     public int RatingAmount { get; set; }
-    public virtual ICollection<SessionEntity>? Sessions { get; set; }
-    public virtual ICollection<VoteEntity>? Votes { get; set; }
+    public virtual ICollection<Session>? Sessions { get; set; }
+    public virtual ICollection<Vote>? Votes { get; set; }
     
 }

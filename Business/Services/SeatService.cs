@@ -34,12 +34,12 @@ namespace Business.Services
             {
                 for (int j = 1; j <= rowLength; j++)
                 {
-                    SeatEntity newSeat = new SeatEntity()
+                    Seat newSeat = new Seat()
                     {
                         Row = i,
                         Number = j,
                         HallId = hallId,
-                        Id = Guid.NewGuid()
+                        SeatId = Guid.NewGuid()
                     };
                     await _seatRepo.CreateSeatAsync(newSeat);
                 }
@@ -55,15 +55,15 @@ namespace Business.Services
                 throw new EntityExistsException("That seat already exists");
             }
 
-            SeatEntity newSeat = new SeatEntity
+            Seat newSeat = new Seat
             {
                 Row = row,
                 Number = num,
                 HallId = hallId,
-                Id = Guid.NewGuid()
+                SeatId = Guid.NewGuid()
             };
             
-            HallEntity? hall = await _hallRepo.GetHallAsync(hallId);
+            Hall? hall = await _hallRepo.GetHallAsync(hallId);
             if (hall == null)
             {
                 throw new NotFoundException("Hall not found!");
@@ -86,10 +86,10 @@ namespace Business.Services
 
         public async Task<ICollection<SeatModel>> GetAllSeatsAsync(Guid hallId)
         {
-            ICollection<SeatEntity> seats = await _seatRepo.GetAllSeatsAsync(hallId);
+            ICollection<Seat> seats = await _seatRepo.GetAllSeatsAsync(hallId);
             ICollection<SeatModel> seatModels = seats.Select(s => new SeatModel
             {
-                Id = s.Id,
+                Id = s.SeatId,
                 Row = s.Row,
                 Number = s.Number,
                 HallId = s.HallId
@@ -99,17 +99,17 @@ namespace Business.Services
 
         public async Task<ICollection<SeatGetSessionModel>> GetSeatsForSessionAsync(Guid hallId, Guid sessionId)
         {
-            ICollection<SeatEntity> seats = await _seatRepo.GetAllSeatsAsync(hallId);
+            ICollection<Seat> seats = await _seatRepo.GetAllSeatsAsync(hallId);
             ICollection<Guid> reservations = await _bookingRepo
-                .GetAllReservationsForSessionAsync(sessionId);
+                .GetAllBookingForSessionAsync(sessionId);
 
             ICollection<SeatGetSessionModel> checkedSeats = seats.Select(s => new SeatGetSessionModel
             {
-                Id = s.Id,
+                Id = s.SeatId,
                 Row = s.Row,
                 Number = s.Number,
                 HallId = s.HallId,
-                IsBooked = reservations.Contains(s.Id)
+                IsBooked = reservations.Contains(s.SeatId)
 
             }).ToList();
 
@@ -120,7 +120,7 @@ namespace Business.Services
         public async Task<SeatModel> GetSeatAsync(Guid seatId)
         {
 
-            SeatEntity? seat = await _seatRepo.GetSeatAsync(seatId);
+            Seat? seat = await _seatRepo.GetSeatAsync(seatId);
             if (seat == null)
             {
                 throw new NullReferenceException("Seat not found!");
@@ -151,7 +151,7 @@ namespace Business.Services
             await _unit.BeginTransactionAsync();
             try
             {
-                SeatEntity? seat = await _seatRepo.GetSeatAsync(seatId);
+                Seat? seat = await _seatRepo.GetSeatAsync(seatId);
                 if (seat == null)
                 {
                     throw new NullReferenceException("Seat not found!");

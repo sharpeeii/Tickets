@@ -1,6 +1,6 @@
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Film;
+using Data.DTOs.Film;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Film;
@@ -14,45 +14,45 @@ public class FilmRepository : IFilmRepository
         _context = context;
     }
 
-    public async Task CreateFilmAsync(FilmEntity film)
+    public async Task CreateFilmAsync(Entities.Film film)
     {
         await _context.Films.AddAsync(film);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ICollection<FilmEntity>> GetAllFilmsAsync()
+    public async Task<ICollection<Entities.Film>> GetAllFilmsAsync()
     {
-        ICollection<FilmEntity> films = await _context.Films.AsNoTracking().ToListAsync();
+        ICollection<Entities.Film> films = await _context.Films.AsNoTracking().ToListAsync();
         return films;
     }
 
-    public async Task<FilmEntity?> GetFilmAsync(Guid id)
+    public async Task<Entities.Film?> GetFilmAsync(Guid id)
     {
-        FilmEntity? film = await _context.Films
-            .FirstOrDefaultAsync(f => f.Id == id);
+        Entities.Film? film = await _context.Films
+            .FirstOrDefaultAsync(f => f.FilmId == id);
         return film;
     }
 
-    public async Task UpdateFilmAsync(Guid id, FilmModel model)
+    public async Task UpdateFilmAsync(Guid id, FilmDto dto)
     {
-        FilmEntity? film = await _context.Films.FirstOrDefaultAsync(f => f.Id == id);
+        Entities.Film? film = await _context.Films.FirstOrDefaultAsync(f => f.FilmId == id);
         
-        film.Duration = model.Duration;
-        film.Genre = model.Genre;
-        film.Name = model.Name;
+        film.Duration = dto.Duration;
+        film.Genre = dto.Genre;
+        film.Name = dto.Name;
             
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteFilmAsync(Guid id)
     {
-        await _context.Films.Where(f => f.Id == id).ExecuteDeleteAsync();
+        await _context.Films.Where(f => f.FilmId == id).ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
 
     public async Task<bool> CheckIfExistsAsync(Guid id)
     {
-        return await _context.Films.AnyAsync(f => f.Id == id);
+        return await _context.Films.AnyAsync(f => f.FilmId == id);
     }
 
     public async Task<bool> NameExistsAsync(string name)

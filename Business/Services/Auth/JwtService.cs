@@ -11,13 +11,13 @@ namespace Business.Services.Auth;
 
 public class JwtService(IOptions<AuthSettings> options) : IJwtService
 {
-    public string GenerateToken(UserEntity userAcc)
+    public string GenerateToken(User userAcc)
     {
         var claims = new List<Claim>
         {
             new Claim("username", userAcc.Username),
             new Claim("email", userAcc.Email),
-            new Claim("id", userAcc.Id.ToString()),
+            new Claim("id", userAcc.UserId.ToString()),
             new Claim(ClaimTypes.Role, userAcc.Role)
         };
         

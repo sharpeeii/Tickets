@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Data.Models.Vote;
+namespace Data.DTOs.Vote;
 
-public class VoteModel
+public class VoteDto
 {
     public Guid FilmId { get; set; }
     

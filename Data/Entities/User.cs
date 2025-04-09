@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entities
 {
-    public class UserEntity
+    public class User
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         
         [MaxLength(50)]
         public string Username { get; set; } = string.Empty;
@@ -14,6 +14,6 @@ namespace Data.Entities
         [MaxLength(10)]
         public string Role { get; set; } = "User";
         public virtual ICollection<Booking>? Reservations { get; set; }
-        public virtual ICollection<VoteEntity>? Votes { get; set; }
+        public virtual ICollection<Vote>? Votes { get; set; }
     }
 }
