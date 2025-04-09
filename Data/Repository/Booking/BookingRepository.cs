@@ -43,7 +43,6 @@ public class BookingRepository : IBookingRepository
                 .ThenInclude(s => s.Hall)
             .Include(b => b.Session)
                 .ThenInclude(s => s.Film)
-            .Include(b=>b.BookedSeats)
             .ToListAsync();
         return bookings;
     }
@@ -57,6 +56,7 @@ public class BookingRepository : IBookingRepository
                 .ThenInclude(b => b.Hall)
             .Include(b => b.Session)
                 .ThenInclude(b => b.Film)
+            //.Include(b=>b.BookedSeats)
             .FirstOrDefaultAsync();
         return booking;
     }

@@ -12,6 +12,7 @@ public class Film
     public TimeSpan Duration { get; set; }
     public float Rating { get; set; }
     public int RatingSum { get; set; }
+    public Decimal BasePrice { get; set; }
     public int RatingAmount { get; set; }
     public virtual ICollection<Session>? Sessions { get; set; }
     public virtual ICollection<Vote>? Votes { get; set; }

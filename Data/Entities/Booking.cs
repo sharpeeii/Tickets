@@ -10,5 +10,5 @@ public class Booking
     public Session? Session { get; set; }
     public Guid UserId { get; set; }
     public User? User { get; set; }
-    public required ICollection<BookedSeat> BookedSeats { get; set; }
+    public ICollection<BookedSeat> BookedSeats { get; set; }
 }

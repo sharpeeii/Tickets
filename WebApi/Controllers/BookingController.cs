@@ -23,8 +23,11 @@ public class BookingController : ControllerBase
     public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDto dto)
     {
         Guid userId = _currentUserService.GetUserId();
-        await _bookingService.CreateBookingAsync(dto, userId);
-        return Created();
+        Guid newBookingId = await _bookingService.CreateBookingAsync(dto, userId);
+        return Ok(new
+        {
+            paymentUrl = $"http://localhost:8080/payment/{newBookingId}"
+        });
     }
 
     [HttpGet("bookings")]
