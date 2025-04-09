@@ -1,5 +1,5 @@
 using Business.Interfaces;
-using Data.Models.Hall;
+using Data.DTOs.Hall;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +17,8 @@ public class HallController : ControllerBase
     
     [HttpGet("halls")]
     public async Task<IActionResult> GetAllHalls()
-    {
-        var halls = await _hallService.GetAllHallsAsync();
+    { 
+        ICollection<HallGetAllDto> halls = await _hallService.GetAllHallsAsync();
         return Ok(halls);
     }
 
@@ -28,5 +28,4 @@ public class HallController : ControllerBase
         var hall = await _hallService.GetHallAsync(hallId);
         return Ok(hall);
     }
-    
 }

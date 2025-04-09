@@ -1,12 +1,12 @@
 using Business.Interfaces;
 using Business.Interfaces.Auth;
-using Data.Models.User;
+using Data.DTOs.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Data.Models.Film;
-using Data.Models.Hall;
-using Data.Models.Seat;
-using Data.Models.Session;
+using Data.DTOs.Film;
+using Data.DTOs.Hall;
+using Data.DTOs.Seat;
+using Data.DTOs.Session;
 
 namespace WebApi.Controllers;
 
@@ -31,9 +31,9 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAdmin([FromBody] UserCreateModel model)
+    public async Task<IActionResult> RegisterAdmin([FromBody] UserCreateDto dto)
     {
-        await _accountService.RegisterAdmin(model);
+        await _accountService.RegisterAdmin(dto);
         return NoContent();
     }
     
@@ -41,17 +41,17 @@ public class AdminController : ControllerBase
     
     [HttpPost("films")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateFilm([FromBody] FilmModel model)
+    public async Task<IActionResult> CreateFilm([FromBody] FilmDto dto)
     {
-        await _filmService.CreateFilmAsync(model);
+        await _filmService.CreateFilmAsync(dto);
         return Created();
     }
     
     [HttpPut("films/{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateFilm([FromRoute] Guid id, [FromBody] FilmModel model)
+    public async Task<IActionResult> UpdateFilm([FromRoute] Guid id, [FromBody] FilmDto dto)
     {
-        await _filmService.UpdateFilmAsync(id, model);
+        await _filmService.UpdateFilmAsync(id, dto);
         return Ok();
     }
 
@@ -67,17 +67,17 @@ public class AdminController : ControllerBase
     
     [HttpPost("halls")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateHall([FromBody] HallCreateModel model)
+    public async Task<IActionResult> CreateHall([FromBody] HallCreateDto dto)
     {
-        await _hallService.CreateHallAsync(model);
+        await _hallService.CreateHallAsync(dto);
         return Created();
     }
 
     [HttpPut("halls/{hallId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateHalls([FromRoute] Guid hallId, [FromBody] HallUpdModel model)
+    public async Task<IActionResult> UpdateHalls([FromRoute] Guid hallId, [FromBody] HallUpdDto dto)
     {
-        await _hallService.UpdateHallAsync(hallId, model);
+        await _hallService.UpdateHallAsync(hallId, dto);
         return Ok();
     }
 
@@ -93,17 +93,17 @@ public class AdminController : ControllerBase
     
     [HttpPost("seats")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateSeat([FromBody] SeatCreateModel model)
+    public async Task<IActionResult> CreateSeat([FromBody] SeatCreateDto dto)
     {
-        await _seatService.CreateSeatAsync(model.Row, model.Number, model.HallId);
+        await _seatService.CreateSeatAsync(dto.Row, dto.Number, dto.HallId);
         return Created();
     }
         
     [HttpPut("seats/{seatId}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateSeat([FromRoute] Guid seatId, [FromBody] SeatUpdModel model)
+    public async Task<IActionResult> UpdateSeat([FromRoute] Guid seatId, [FromBody] SeatUpdDto dto)
     {
-        await _seatService.UpdateSeatAsync(seatId, model.HallId, model);
+        await _seatService.UpdateSeatAsync(seatId, dto.HallId, dto);
         return Ok();
     }
 
@@ -119,9 +119,9 @@ public class AdminController : ControllerBase
     
     [HttpPost("sessions")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateSession([FromBody] SessionCreateModel model)
+    public async Task<IActionResult> CreateSession([FromBody] SessionCreateDto dto)
     {
-        await _sessionService.CreateSessionAsync(model);
+        await _sessionService.CreateSessionAsync(dto);
         return Ok();
     }
     
@@ -132,5 +132,4 @@ public class AdminController : ControllerBase
         await _sessionService.DeleteSessionAsync(sessionId);
         return Ok();
     }
-    
 }

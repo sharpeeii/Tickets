@@ -1,7 +1,7 @@
 using Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Data.Models.Film;
+using Data.DTOs.Film;
 
 namespace WebApi.Controllers;
 
@@ -18,15 +18,14 @@ public class FilmController : ControllerBase
     [HttpGet("films")]
     public async Task<IActionResult> GetAllFilms()
     {
-        ICollection<FilmGetModel> films = await _filmService.GetAllFilmsAsync();
+        ICollection<FilmGetDto> films = await _filmService.GetAllFilmsAsync();
         return Ok(films);
     }
 
     [HttpGet("films/{id}")]
     public async Task<IActionResult> GetFilmById([FromRoute] Guid id)
     {
-        FilmGetModel? film = await _filmService.GetFilmAsync(id);
+        FilmGetDto? film = await _filmService.GetFilmAsync(id);
         return Ok(film);
     }
-
 }

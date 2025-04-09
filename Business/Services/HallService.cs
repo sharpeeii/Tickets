@@ -1,10 +1,10 @@
 using Business.Interfaces;
 using Data.Entities;
-using Data.Models.Hall;
+using Data.DTOs.Hall;
 using Common.Helpers;
 using Common.Exceptions;
 using Data.Interfaces;
-using Data.Models.Seat;
+using Data.DTOs.Seat;
 
 namespace Business.Services;
 public class HallService : IHallService
@@ -18,35 +18,35 @@ public class HallService : IHallService
         _seatService = seatService;
     }
 
-    public async Task CreateHallAsync(HallCreateModel model)
+    public async Task CreateHallAsync(HallCreateDto dto)
     {
-        ValidationHelper.ValidateStringLength(model.Name, maxLength: 20);
-        ValidationHelper.ValidateMaxValue(model.NumberOfSeats, maxValue: 250);
-        ValidationHelper.ValidateRowsAmount(model.NumberOfSeats, model.Rows);
+        ValidationHelper.ValidateStringLength(dto.Name, maxLength: 20);
+        ValidationHelper.ValidateMaxValue(dto.NumberOfSeats, maxValue: 250);
+        ValidationHelper.ValidateRowsAmount(dto.NumberOfSeats, dto.Rows);
         
-        bool hallExists = await _hallRepo.CheckForDuplicateAsync(model.Name);
+        bool hallExists = await _hallRepo.CheckForDuplicateAsync(dto.Name);
         if (hallExists)
         {
-            throw new EntityExistsException($"Hall with name '{model.Name}' already exists");
+            throw new EntityExistsException($"Hall with name '{dto.Name}' already exists");
         }
 
-        var newHall = new HallEntity
+        Hall newHall = new Hall
         {
-            Name = model.Name,
-            NumberOfSeats = model.NumberOfSeats,
-            Id = Guid.NewGuid()
+            Name = dto.Name,
+            NumberOfSeats = dto.NumberOfSeats,
+            HallId = Guid.NewGuid()
         };
         
         await _hallRepo.CreateHallAsync(newHall);
-        await _seatService.AutomaticCreationAsync(model.NumberOfSeats, model.Rows, newHall.Id);
+        await _seatService.AutomaticCreationAsync(dto.NumberOfSeats, dto.Rows, newHall.HallId);
     }
 
-    public async Task<ICollection<HallGetModel>> GetAllHallsAsync()
+    public async Task<ICollection<HallGetAllDto>> GetAllHallsAsync()
     {
-        var halls = await _hallRepo.GetAllHallsAsync();
-        var hallModels = halls.Select(h => new HallGetModel
+        ICollection<Hall> halls = await _hallRepo.GetAllHallsAsync();
+        ICollection<HallGetAllDto> hallModels = halls.Select(h => new HallGetAllDto()
         {
-            Id = h.Id,
+            Id = h.HallId,
             Name = h.Name,
             NumberOfSeats = h.NumberOfSeats
         }).ToList();
@@ -54,36 +54,34 @@ public class HallService : IHallService
         return hallModels;
     }
 
-    public async Task<HallGetEagerModel> GetHallAsync(Guid hallId)
+    public async Task<HallGetDto> GetHallAsync(Guid hallId)
     {
-        HallEntity? hall = await _hallRepo.GetHallAsync(hallId);
+        Hall? hall = await _hallRepo.GetHallAsync(hallId);
         if (hall == null)
         {
             throw new NotFoundException("Hall not found!");
         }
-        ICollection<SeatModel> seatModels = hall.Seats  
-            .Select(s => new SeatModel
+        ICollection<SeatDto> seatModels = hall.Seats  
+            .Select(s => new SeatDto()
             {
-                Id = s.Id,
+                Id = s.SeatId,
                 HallId = s.HallId,
                 Number = s.Number,
                 Row = s.Row
             }).ToList();
         
-        HallGetEagerModel hallModel = new HallGetEagerModel()
+        HallGetDto hallDto = new HallGetDto()
         {
-            Id = hall.Id,
+            Id = hall.HallId,
             Name = hall.Name,
             NumberOfSeats = hall.NumberOfSeats,
-            SeatModels = seatModels
+            SeatDtos = seatModels
         };
-        return hallModel;
+        return hallDto;
     }
 
-    public async Task UpdateHallAsync(Guid hallId, HallUpdModel model)
+    public async Task UpdateHallAsync(Guid hallId, HallUpdDto model)
     {
-        
-        
         if (!string.IsNullOrEmpty(model.Name))
         {
         bool hallExists = await _hallRepo.CheckForDuplicateAsync(model.Name);
@@ -91,7 +89,6 @@ public class HallService : IHallService
             {
                 throw new EntityExistsException($"Hall with name {model.Name} already exists");
             }
-            
         ValidationHelper.ValidateStringLength(model.Name, maxLength: 20);
         await _hallRepo.UpdateHallNameAsync(hallId, model.Name);
         }

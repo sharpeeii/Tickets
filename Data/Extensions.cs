@@ -18,7 +18,7 @@ namespace Data
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<FilmRepository>();
             services.AddScoped<IFilmRepository, CachedFilmRepository>();
-            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IVoteRepository, VoteRepository>();

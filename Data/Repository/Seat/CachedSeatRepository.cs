@@ -1,6 +1,7 @@
+using Data.DTOs.Seat;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Seat;
+using Data.DTOs.Seat;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -24,25 +25,25 @@ public class CachedSeatRepository : ISeatRepository
         _logger = logger;
     }
     
-    public async Task CreateSeatAsync(SeatEntity seat)
+    public async Task CreateSeatAsync(Entities.Seat seat)
     {
         await _decoratedRepo.CreateSeatAsync(seat);
     }
 
-    public async Task<ICollection<SeatEntity>> GetAllSeatsAsync(Guid hallId)
+    public async Task<ICollection<Entities.Seat>> GetAllSeatsAsync(Guid hallId)
     {
         string key = "seats-all";
         _logger.LogInformation("fetching cache");
         string? cachedSeats = await _distributedCache.GetStringAsync(key);
         
-        ICollection<SeatEntity> seats;
+        ICollection<Entities.Seat> seats;
         if (string.IsNullOrEmpty(cachedSeats))
         {
             _logger.LogInformation("fetching db");
             seats = await _decoratedRepo.GetAllSeatsAsync(hallId);
             if (seats.Count == 0)
             {
-                return new List<SeatEntity>();
+                return new List<Entities.Seat>();
             }
             _logger.LogInformation("writing cache");
             await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(seats),
@@ -54,23 +55,23 @@ public class CachedSeatRepository : ISeatRepository
             return seats;
         }
         _logger.LogInformation("sending cache");
-        seats = JsonConvert.DeserializeObject<List<SeatEntity>>(cachedSeats);
+        seats = JsonConvert.DeserializeObject<List<Entities.Seat>>(cachedSeats);
         return seats;
     }
 
-    public async Task<SeatEntity?> GetSeatAsync(Guid seatId)
+    public async Task<Entities.Seat?> GetSeatAsync(Guid seatId)
     {
         return await _decoratedRepo.GetSeatAsync(seatId);
     }
 
-    public async Task<ICollection<SeatEntity?>> GetMultipleSeatsAsync(ICollection<Guid> seatIds)
+    public async Task<ICollection<Entities.Seat?>> GetMultipleSeatsAsync(ICollection<Guid> seatIds)
     {
         return await _decoratedRepo.GetMultipleSeatsAsync(seatIds);
     }
 
-    public async Task UpdateSeatAsync(Guid seatId, SeatUpdModel model)
+    public async Task UpdateSeatAsync(Guid seatId, SeatUpdDto dto)
     {
-        await _decoratedRepo.UpdateSeatAsync(seatId, model);
+        await _decoratedRepo.UpdateSeatAsync(seatId, dto);
     }
 
     public async Task DeleteSeatAsync(Guid seatId)

@@ -1,9 +1,9 @@
 using Business.Interfaces;
 using Common.Exceptions;
 using Common.Helpers;
+using Data.DTOs.Vote;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Vote;
 
 namespace Business.Services;
 
@@ -23,16 +23,16 @@ public class VoteService : IVoteService
         _accountRepo = accountRepo;
     }
 
-    public async Task CreateVoteAsync(VoteModel model, Guid userId)
+    public async Task CreateVoteAsync(VoteDto dto, Guid userId)
     {
-        ValidationHelper.ValidateRatingValue(model.Rating);
+        ValidationHelper.ValidateRatingValue(dto.Rating);
         
-        if (await _voteRepo.VoteExistsAsync(userId, model.FilmId))
+        if (await _voteRepo.VoteExistsAsync(userId, dto.FilmId))
         {
             throw new EntityExistsException("Film already rated by this user!");
         }
         
-        FilmEntity? film = await _filmRepo.GetFilmAsync(model.FilmId);
+        Film? film = await _filmRepo.GetFilmAsync(dto.FilmId);
 
         if (film == null)
         {
@@ -40,18 +40,18 @@ public class VoteService : IVoteService
         }
 
         
-        VoteEntity newVote = new VoteEntity()
+        Vote newVote = new Vote()
         {
-            Id = Guid.NewGuid(),
-            FilmId = model.FilmId,
+            VoteId = Guid.NewGuid(),
+            FilmId = dto.FilmId,
             UserId = userId,
-            Rating = model.Rating
+            Rating = dto.Rating
         };
         
         await _unit.BeginTransactionAsync();
         try
         {
-            film.RatingSum += model.Rating;
+            film.RatingSum += dto.Rating;
             film.RatingAmount++;
             film.Rating = (float)film.RatingSum / film.RatingAmount;
             
@@ -69,13 +69,13 @@ public class VoteService : IVoteService
 
     public async Task DeleteVoteAsync(Guid userId, Guid filmId)
     {
-        VoteEntity? vote = await _voteRepo.GetVoteAsync(userId, filmId);
+        Vote? vote = await _voteRepo.GetVoteAsync(userId, filmId);
         if (vote == null)
         {
             throw new NotFoundException("Vote not found!");
         }
 
-        FilmEntity? film = await _filmRepo.GetFilmAsync(filmId);
+        Film? film = await _filmRepo.GetFilmAsync(filmId);
 
         if (film == null)
         {
@@ -96,7 +96,7 @@ public class VoteService : IVoteService
                 film.Rating = (float)film.RatingSum / film.RatingAmount;
             }
             
-            await _voteRepo.DeleteVoteAsync(vote.Id);
+            await _voteRepo.DeleteVoteAsync(vote.VoteId);
 
             await _unit.SaveChangesAsync();
             await _unit.CommitAsync();

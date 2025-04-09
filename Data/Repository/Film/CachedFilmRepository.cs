@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Data.Entities;
 using Data.Interfaces;
-using Data.Models.Film;
+using Data.DTOs.Film;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -22,18 +22,18 @@ public class CachedFilmRepository : IFilmRepository
         _logger = logger;
     }
     
-    public async Task CreateFilmAsync(FilmEntity film)
+    public async Task CreateFilmAsync(Entities.Film film)
     {
         await _decoratedRepo.CreateFilmAsync(film);
     }
 
-    public async Task<ICollection<FilmEntity>> GetAllFilmsAsync()
+    public async Task<ICollection<Entities.Film>> GetAllFilmsAsync()
     {
         string key = "films-all";
         _logger.LogInformation("fetching film list from cache...");
         string? cachedFilms = await _distributedCache.GetStringAsync(key);
 
-        ICollection<FilmEntity> films;
+        ICollection<Entities.Film> films;
 
         if (string.IsNullOrEmpty(cachedFilms))
         {
@@ -42,7 +42,7 @@ public class CachedFilmRepository : IFilmRepository
             films = await _decoratedRepo.GetAllFilmsAsync();
             if (films.Count == 0)
             {
-                return new List<FilmEntity>();
+                return new List<Entities.Film>();
             }
             
             _logger.LogInformation("writing film list into cache...");
@@ -58,18 +58,18 @@ public class CachedFilmRepository : IFilmRepository
         }
         _logger.LogInformation("sending film list from cache...");
 
-        films = JsonConvert.DeserializeObject<List<FilmEntity>>(cachedFilms);
+        films = JsonConvert.DeserializeObject<List<Entities.Film>>(cachedFilms);
         return films;
 
     }
 
-    public async Task<FilmEntity?> GetFilmAsync(Guid filmId)
+    public async Task<Entities.Film?> GetFilmAsync(Guid filmId)
     {
         string key = $"film-{filmId}";
         _logger.LogInformation($"fetching {filmId} from cache...");
         string? cachedFilm = await _distributedCache.GetStringAsync(key);
         ;
-        FilmEntity? film;
+        Entities.Film? film;
         
         if (string.IsNullOrEmpty(cachedFilm))
         {
@@ -88,16 +88,16 @@ public class CachedFilmRepository : IFilmRepository
             return film;
         }
 
-        film = JsonConvert.DeserializeObject<FilmEntity>(cachedFilm);
+        film = JsonConvert.DeserializeObject<Entities.Film>(cachedFilm);
         _logger.LogInformation($"sending {filmId} from cache...");
         return film;
     }
 
-    public async Task UpdateFilmAsync(Guid filmId, FilmModel model)
+    public async Task UpdateFilmAsync(Guid filmId, FilmDto dto)
     { 
         string key = $"film-{filmId}"; 
         await _distributedCache.RemoveAsync(key);
-        await _decoratedRepo.UpdateFilmAsync(filmId, model);
+        await _decoratedRepo.UpdateFilmAsync(filmId, dto);
     }
 
     public async Task DeleteFilmAsync(Guid filmId)
