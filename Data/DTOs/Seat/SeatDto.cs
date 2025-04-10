@@ -6,4 +6,5 @@ public class SeatDto
     public int Row { get; set; }
     public int Number { get; set; }
     public Guid HallId { get; set; }
+    public SeatTypeDto SeatTypeDto { get; set; }
 }

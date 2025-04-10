@@ -20,8 +20,7 @@ public class SeatTypeService : ISeatTypeService
         ICollection<SeatTypeDto> seatTypeDtos = seatTypes.Select(s => new SeatTypeDto()
         {
             SeatTypeId = s.SeatTypeId,
-            Type = s.Type,
-            Coefficient = s.Coefficient
+            Type = s.Type
         }).ToList();
         return seatTypeDtos;
     }

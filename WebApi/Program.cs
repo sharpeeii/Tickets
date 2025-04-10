@@ -29,10 +29,11 @@ using (IServiceScope scope = app.Services.CreateScope())
 {
     AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
-    
     DbSeeder seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
     seeder.SeedSeatTypes();
+
 }
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

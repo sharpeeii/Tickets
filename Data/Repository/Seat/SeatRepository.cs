@@ -23,6 +23,7 @@ public class SeatRepository : ISeatRepository
         ICollection<Entities.Seat> seats = await _context.Seats
             .AsNoTracking()
             .Where(s=>s.HallId== hallId)
+            .Include(s=>s.SeatType)
             .ToListAsync();
         return seats;
     }
@@ -31,6 +32,7 @@ public class SeatRepository : ISeatRepository
     {
         Entities.Seat? seat = await _context.Seats
             .Where(s => s.SeatId == seatId)
+            .Include(s=>s.SeatType)
             .FirstOrDefaultAsync();
         return seat;
     }
@@ -39,6 +41,7 @@ public class SeatRepository : ISeatRepository
     {
         ICollection<Entities.Seat> seats = await _context.Seats
             .Where(s => seatIds.Contains(s.SeatId))
+            .Include(s=>s.SeatType)
             .ToListAsync();
         return seats;
     }

@@ -10,7 +10,7 @@ namespace Data.Entities
         public Guid HallId { get; set; }
         public virtual Hall? Hall { get; set; }
         public virtual ICollection<BookedSeat>? BookedSeats { get; set; }
-        public Guid SeatTypeId { get; set; }
+        public int SeatTypeId { get; set; } = 1;
         public virtual SeatType SeatType { get; set; }
     }
 }

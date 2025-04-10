@@ -14,6 +14,7 @@ public class DbSeeder
     public void SeedSeatTypes()
     {
         _context.SeatTypes.AddRange(ConfigureBaseTypes());
+        _context.SaveChanges();
     }
 
     public ICollection<SeatType> ConfigureBaseTypes()

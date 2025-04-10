@@ -39,7 +39,7 @@ public class SeatService : ISeatService
                     Row = i,
                     Number = j,
                     HallId = hallId,
-                    SeatId = Guid.NewGuid(),
+                    SeatId = Guid.NewGuid()
                 };
                 await _seatRepo.CreateSeatAsync(newSeat);
             }
@@ -92,7 +92,13 @@ public class SeatService : ISeatService
             Id = s.SeatId,
             Row = s.Row,
             Number = s.Number,
-            HallId = s.HallId
+            HallId = s.HallId,
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId =  s.SeatTypeId,
+                Type = s.SeatType.Type
+            }
+            
         }).ToList();
         return seatModels;
     }
@@ -109,7 +115,12 @@ public class SeatService : ISeatService
             Row = s.Row,
             Number = s.Number,
             HallId = s.HallId,
-            IsBooked = reservations.Contains(s.SeatId)
+            IsBooked = reservations.Contains(s.SeatId),
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId =  s.SeatTypeId,
+                Type = s.SeatType.Type
+            }
 
         }).ToList();
 
@@ -126,13 +137,18 @@ public class SeatService : ISeatService
             throw new NullReferenceException("Seat not found!");
         }
         
-        SeatDto seatModel = new SeatDto()
+        SeatDto seatDto = new SeatDto()
         {
             Row = seat.Row,
             Number = seat.Number,
-            HallId = seat.HallId
+            HallId = seat.HallId,
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId =  seat.SeatTypeId,
+                Type = seat.SeatType.Type
+            }
         };
-        return seatModel;
+        return seatDto;
     }
 
     public async Task UpdateSeatAsync(Guid seatId, Guid hallId, SeatUpdDto dto)
