@@ -85,7 +85,7 @@ public class SeatService : ISeatService
     public async Task<ICollection<SeatDto>> GetAllSeatsAsync(Guid hallId)
     {
         ICollection<Seat> seats = await _seatRepo.GetAllSeatsAsync(hallId);
-        ICollection<SeatDto> seatModels = seats.Select(s => new SeatDto
+        ICollection<SeatDto> seatDtos = seats.Select(s => new SeatDto
         {
             Id = s.SeatId,
             Row = s.Row,
@@ -96,9 +96,8 @@ public class SeatService : ISeatService
                 SeatTypeId = s.SeatType.SeatTypeId,
                 Type = s.SeatType.Type
             }
-            
         }).ToList();
-        return seatModels;
+        return seatDtos;
     }
 
     public async Task<ICollection<SeatGetSessionDto>> GetSeatsForSessionAsync(Guid hallId, Guid sessionId)
@@ -160,6 +159,7 @@ public class SeatService : ISeatService
         await _seatRepo.UpdateSeatAsync(seatId, dto);
     }
 
+    
     public async Task DeleteSeatAsync(Guid seatId)
     {
         await _unit.BeginTransactionAsync();
