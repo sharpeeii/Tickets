@@ -168,6 +168,5 @@ public class SeatService : ISeatService
             await _unit.RollbackAsync();
             throw;
         }
-        
     }
 }
