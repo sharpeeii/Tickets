@@ -43,7 +43,7 @@ public async Task CreatePaymentAsync(PaymentSimulation payment)
     public async Task<PaymentSimulation?> GetPaymentSimulation(Guid paymentId)
     {
         PaymentSimulation? payment = await _context.Payments
-            .FirstOrDefaultAsync(p => p.PaymentId == paymentId);
+            .FirstOrDefaultAsync(p => p.PaymentSimulationId == paymentId);
         return payment;
     }
 }

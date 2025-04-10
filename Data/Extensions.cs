@@ -15,13 +15,16 @@ namespace Data
             services.AddScoped<IHallRepository, HallRepository>();
             services.AddScoped<SeatRepository>();
             services.AddScoped<ISeatRepository, CachedSeatRepository>();
+            services.AddScoped<ISeatTypeRepository, SeatTypeRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<FilmRepository>();
             services.AddScoped<IFilmRepository, CachedFilmRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IVoteRepository, VoteRepository>();
+            services.AddScoped<DbSeeder>();
 
             
             services.AddStackExchangeRedisCache(options =>

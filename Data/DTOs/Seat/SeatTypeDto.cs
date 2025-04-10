@@ -1,9 +1,8 @@
-namespace Data.Entities;
+namespace Data.DTOs.Seat;
 
-public class SeatType
+public class SeatTypeDto
 {
     public int SeatTypeId { get; set; }
     public string Type { get; set; } // default/premium/accessible
     public decimal Coefficient { get; set; }
-    public virtual ICollection<Seat> Seats { get; set; }
 }

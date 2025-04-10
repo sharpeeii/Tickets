@@ -4,7 +4,7 @@ namespace Data.Entities;
 
 public class PaymentSimulation
 {
-    public Guid PaymentId { get; set; }
+    public Guid PaymentSimulationId { get; set; }
     public DateTime PaymentDate { get; set; }
     public Guid BookingId { get; set; }
     public Booking Booking { get; set; }

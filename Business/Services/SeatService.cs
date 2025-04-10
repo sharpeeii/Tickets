@@ -39,7 +39,7 @@ public class SeatService : ISeatService
                     Row = i,
                     Number = j,
                     HallId = hallId,
-                    SeatId = Guid.NewGuid()
+                    SeatId = Guid.NewGuid(),
                 };
                 await _seatRepo.CreateSeatAsync(newSeat);
             }

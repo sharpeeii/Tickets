@@ -3,6 +3,7 @@ using Business;
 using Microsoft.EntityFrameworkCore;
 using Business.Services.Auth;
 using Business.Services.Background;
+using Common.Helpers;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Scalar.AspNetCore;
 using WebApi.Middleware;
@@ -23,10 +24,14 @@ builder.Services.AddSwaggerWithJwt();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
+    
+    DbSeeder seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+    seeder.SeedSeatTypes();
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -50,11 +55,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.Migrate();
-}
 
 app.Run();
 
