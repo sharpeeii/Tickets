@@ -4,8 +4,6 @@ using Data.Interfaces;
 using Data.Entities;
 using Common.Helpers;
 using Common.Exceptions;
-using Data.Repository.Seat;
-
 namespace Business.Services;
 
 public class SeatService : ISeatService
@@ -95,7 +93,7 @@ public class SeatService : ISeatService
             HallId = s.HallId,
             SeatTypeDto = new SeatTypeDto()
             {
-                SeatTypeId =  s.SeatTypeId,
+                SeatTypeId = s.SeatType.SeatTypeId,
                 Type = s.SeatType.Type
             }
             
