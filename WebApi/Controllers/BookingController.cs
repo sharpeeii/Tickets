@@ -29,7 +29,7 @@ public class BookingController : ControllerBase
             paymentUrl = $"http://localhost:8080/payment/{newBookingId}"
         });
     }
-
+    
     [HttpGet("bookings")]
     [Authorize]
     public async Task<IActionResult> GetAllReservations()

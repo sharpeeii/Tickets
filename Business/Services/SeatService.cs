@@ -4,8 +4,6 @@ using Data.Interfaces;
 using Data.Entities;
 using Common.Helpers;
 using Common.Exceptions;
-using Data.Repository.Seat;
-
 namespace Business.Services;
 
 public class SeatService : ISeatService
@@ -87,14 +85,19 @@ public class SeatService : ISeatService
     public async Task<ICollection<SeatDto>> GetAllSeatsAsync(Guid hallId)
     {
         ICollection<Seat> seats = await _seatRepo.GetAllSeatsAsync(hallId);
-        ICollection<SeatDto> seatModels = seats.Select(s => new SeatDto
+        ICollection<SeatDto> seatDtos = seats.Select(s => new SeatDto
         {
             Id = s.SeatId,
             Row = s.Row,
             Number = s.Number,
-            HallId = s.HallId
+            HallId = s.HallId,
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId = s.SeatType.SeatTypeId,
+                Type = s.SeatType.Type
+            }
         }).ToList();
-        return seatModels;
+        return seatDtos;
     }
 
     public async Task<ICollection<SeatGetSessionDto>> GetSeatsForSessionAsync(Guid hallId, Guid sessionId)
@@ -109,7 +112,12 @@ public class SeatService : ISeatService
             Row = s.Row,
             Number = s.Number,
             HallId = s.HallId,
-            IsBooked = reservations.Contains(s.SeatId)
+            IsBooked = reservations.Contains(s.SeatId),
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId =  s.SeatTypeId,
+                Type = s.SeatType.Type
+            }
 
         }).ToList();
 
@@ -126,13 +134,18 @@ public class SeatService : ISeatService
             throw new NullReferenceException("Seat not found!");
         }
         
-        SeatDto seatModel = new SeatDto()
+        SeatDto seatDto = new SeatDto()
         {
             Row = seat.Row,
             Number = seat.Number,
-            HallId = seat.HallId
+            HallId = seat.HallId,
+            SeatTypeDto = new SeatTypeDto()
+            {
+                SeatTypeId =  seat.SeatTypeId,
+                Type = seat.SeatType.Type
+            }
         };
-        return seatModel;
+        return seatDto;
     }
 
     public async Task UpdateSeatAsync(Guid seatId, Guid hallId, SeatUpdDto dto)
@@ -146,6 +159,7 @@ public class SeatService : ISeatService
         await _seatRepo.UpdateSeatAsync(seatId, dto);
     }
 
+    
     public async Task DeleteSeatAsync(Guid seatId)
     {
         await _unit.BeginTransactionAsync();
@@ -168,6 +182,5 @@ public class SeatService : ISeatService
             await _unit.RollbackAsync();
             throw;
         }
-        
     }
 }

@@ -12,6 +12,7 @@ namespace Business
         {
             services.AddScoped<IHallService, HallService>();
             services.AddScoped<ISeatService, SeatService>();
+            services.AddScoped<ISeatTypeService, SeatTypeService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IFilmService, FilmService>();
             services.AddScoped<IJwtService, JwtService>();
@@ -25,7 +26,7 @@ namespace Business
 } 
 
 //   ,-.       _,---._ __  / \
-//  /  )    .-'       `./ /   \    <----- кладет классные зависимости в классный контейнер!!!
+//  /  )    .-'       `./ /   \ 
 // (  (   ,'            `/    /|   
 //  \  `-"             \'\   / |      
 //   `.              ,  \ \ /  |
